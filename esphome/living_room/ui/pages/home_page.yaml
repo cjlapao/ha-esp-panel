@@ -1,0 +1,1278 @@
+id: home_page
+bg_color: color_black
+scrollable: false
+widgets:
+  - obj:
+      id: home_root_bg
+      width: 480
+      height: 480
+      align: CENTER
+      clickable: false
+      scrollable: false
+      pad_all: 0
+      radius: 0
+      bg_color: color_black
+      border_opa: transp
+      shadow_opa: transp
+
+  # indicators
+  - obj:
+      id: home_bg_indicators
+      y: 10
+      width: 460
+      height: 40
+      align: TOP_MID
+      pad_all: 0
+      bg_color: color_steel_blue
+      bg_opa: transp
+      border_opa: transp
+      border_width: 0
+      shadow_opa: transp
+      widgets:
+
+        # Wi-Fi status
+        - label:
+            id: wifi_status
+            align: left_mid
+            x: 20
+            text: "${wifi_100_icon}"
+            text_color: color_steel_blue
+            text_font: icons_24
+
+        # Home Assistant status
+        - label:
+            id: ha_status
+            align: left_mid
+            x: 60
+            text: "${ha_icon}"
+            text_color: color_steel_blue
+            text_font: mdi_icons_24
+
+        # Lock status
+        - label:
+            id: lock_status
+            align: left_mid
+            x: 100
+            text: "${lock_icon}"
+            text_color: color_steel_blue
+            text_font: icons_24
+
+        # Heating status
+        - label:
+            id: heating_status
+            align: right_mid
+            x: -20
+            text: "${heating_icon}"
+            text_color: color_steel_blue
+            text_font: icons_24
+
+        # AC status
+        - label:
+            id: ac_status
+            align: right_mid
+            x: -60
+            y: 2
+            text: "${air_conditioner_icon}"
+            text_color: color_steel_blue
+            text_font: icons_24
+
+        # Alarm panel status
+        - label:
+            id: alarm_panel_status
+            align: right_mid
+            x: -100
+            text: "${shield_arming_icon}"
+            text_color: color_steel_blue
+            text_font: mdi_icons_24
+
+  # weather
+
+  - obj:
+      id: home_weather_card
+      hidden: false
+      y: 60
+      width: 440
+      height: 220
+      align: top_mid
+      clickable: false
+      scrollable: false
+      radius: 20
+      pad_all: 0
+      bg_color: color_slate_blue_gray
+      border_opa: transp
+      border_width: 0
+      shadow_opa: transp
+      widgets:
+        - obj:
+            id: weather_time_widget
+            hidden: false
+            width: 440
+            height: 80
+            align: top_mid
+            clickable: false
+            radius: 20
+            pad_all: 0
+            bg_opa: transp
+            border_opa: transp
+            border_width: 0
+            shadow_opa: transp
+            widgets:
+              - label:
+                  id: home_outside_temp_label
+                  x: 30
+                  y: 10
+                  align: top_left
+                  text_font: nunito_48
+                  text_color: color_misty_blue
+                  text: "-25°"
+                  text_align: right
+
+              - label:
+                  id: home_humidity_label
+                  x: -60
+                  y: 10
+                  align: top_right
+                  text_font: nunito_18
+                  text_color: color_misty_blue
+                  text: " "
+                  text_align: right
+
+              # - label:
+              #     id: weather_humidity_measurement
+              #     x: -60
+              #     y: 10
+              #     align: top_right
+              #     text_font: nunito_20
+              #     text_color: color_misty_blue
+              #     text: "%"
+              #     text_align: right
+                
+              - label:
+                  id: weather_humidity_icon
+                  x: -30
+                  y: 10
+                  align: top_right
+                  text_font: icons_24
+                  text_color: color_blue
+                  text: "${humidity_icon}"
+                  text_align: right
+
+              - label:
+                  id: home_wind_label
+                  x: -90
+                  y: 40
+                  align: top_right
+                  text_font: nunito_18
+                  text_color: color_misty_blue
+                  text: " "
+                  text_align: right
+
+              - label:
+                  id: weather_wind_speed_unit
+                  x: -60
+                  y: 40
+                  align: top_right
+                  text_font: nunito_18
+                  text_color: color_misty_blue
+                  text: " "
+                  text_align: right
+
+              # - label:
+              #     id: weather_wind_speed_icon
+              #     x: -30
+              #     y: 40
+              #     align: top_right
+              #     text_font: mdi_icons_24
+              #     text_color: color_misty_blue
+              #     text: "${windsock_icon}"
+              #     text_align: right
+
+              - image:
+                  id: weather_wind_speed_image
+                  y: 40
+                  x: -12
+                  align: top_right
+                  src: home_windsock_img
+
+              - obj:
+                  id: weather_time_widget_line
+                  y: -5
+                  width: 400
+                  height: 2
+                  align: bottom_mid
+                  bg_color: color_misty_blue
+                  border_opa: transp
+                  shadow_opa: transp
+
+        - obj: 
+            id: datetime_widget
+            y: 80
+            hidden: false
+            width: 440
+            height: 140
+            align: top_mid
+            clickable: false
+            radius: 20
+            pad_all: 0
+            bg_opa: transp
+            border_opa: transp
+            border_width: 0
+            shadow_opa: transp
+            widgets:
+              - label:
+                  id: home_day_label
+                  x: 40
+                  y: 105
+                  align: top_left
+                  text_font: nunito_16
+                  text_color: color_misty_blue
+                  text: "Monday"
+
+              - label:
+                  id: home_date_label
+                  x: -40
+                  y: 105
+                  align: top_right
+                  text_font: nunito_16
+                  text_color: color_misty_blue
+                  text: "31, December"
+
+              - label:
+                  id: home_time_label
+                  y: 0
+                  align: top_mid
+                  text_font: nunito_64
+                  text_color: color_misty_blue
+                  text: "23:59"
+
+              - obj:
+                  id: datetime_widget_line
+                  y: -50
+                  width: 400
+                  height: 2
+                  align: bottom_mid
+                  bg_color: color_misty_blue
+                  border_opa: transp
+                  shadow_opa: transp
+
+
+        - obj: 
+            id: weather_widget
+            y: 40
+            hidden: true
+            width: 440
+            height: 80
+            align: top_mid
+            clickable: false
+            radius: 20
+            pad_all: 0
+            bg_opa: transp
+            border_opa: transp
+            border_width: 0
+            shadow_opa: transp
+            widgets:
+              - label:
+                  id: home_weather_state_label
+                  y: -5
+                  width: 380
+                  height: 30
+                  align:  bottom_mid
+                  text_font: nunito_18
+                  text_color: color_misty_blue
+                  long_mode: SCROLL_CIRCULAR
+                  text: " "
+                  text_align: center
+
+        - obj:
+            id: info_widget
+            hidden: true
+            width: 440
+            height: 220
+            align: top_mid
+            clickable: false
+            radius: 20
+            pad_all: 0
+            bg_opa: transp
+            border_opa: transp
+            border_width: 0
+            shadow_opa: transp
+            widgets:
+              - label:  
+                  id: wifi_signal_info_label
+                  x: 20
+                  y: 30
+                  align: top_left
+                  text_font: nunito_18
+                  text_color: color_misty_blue
+                  text: "WiFi Signal:"
+              - label:  
+                  id: wifi_signal_info_state
+                  x: -20
+                  y: 30
+                  align: top_right
+                  text_font: nunito_18
+                  text_color: color_misty_blue
+                  text: "-59 dBm"
+              - label:  
+                  id: ip_address_info_label
+                  x: 20
+                  y: 70
+                  align: top_left
+                  text_font: nunito_18
+                  text_color: color_misty_blue
+                  text: "IP Address:"
+              - label:  
+                  id: ip_address_info_state
+                  x: -20
+                  y: 70
+                  align: top_right
+                  text_font: nunito_18
+                  text_color: color_misty_blue
+                  text: "192.168.0.10"
+              - label:  
+                  id: mac_address_info_label
+                  x: 20
+                  y: 110
+                  align: top_left
+                  text_font: nunito_18
+                  text_color: color_misty_blue
+                  text: "MAC Address:"
+              - label:  
+                  id: mac_address_info_state
+                  x: -20
+                  y: 110
+                  align: top_right
+                  text_font: nunito_18
+                  text_color: color_misty_blue
+                  text: "12:34:56:78:90:AB"
+              - label:  
+                  id: esphome_version_info_label
+                  x: 20
+                  y: 150
+                  align: top_left
+                  text_font: nunito_18
+                  text_color: color_misty_blue
+                  text: "ESPHome Version:"
+              - label:  
+                  id: esphome_version_info_state
+                  x: -20
+                  y: 150
+                  align: top_right
+                  text_font: nunito_18
+                  text_color: color_misty_blue
+                  text: "2025.9.0"
+
+        - obj:
+            id: settings_widget
+            hidden: true
+            width: 440
+            height: 220
+            align: top_mid
+            clickable: false
+            radius: 20
+            pad_all: 0
+            bg_color: color_slate_blue_gray
+            bg_opa: transp
+            border_opa: transp
+            border_width: 0
+            shadow_opa: transp
+            widgets:
+              - obj:
+                  id: backlight_settings_brightness_background
+                  width: 220
+                  height: 220
+                  align: top_left
+                  clickable: false
+                  radius: 20
+                  pad_all: 0
+                  bg_color: color_slate_blue_gray
+                  border_opa: transp
+                  border_width: 0
+                  shadow_opa: transp
+                  widgets:
+                    - label:  
+                        id: backlight_settings_brightness_label
+                        y: 20
+                        align: top_mid
+                        text_font: nunito_18
+                        text_color: color_misty_blue
+                        text: "Backlight"
+
+                    - slider:
+                        id: backlight_settings_brightness_slider
+                        y: -20
+                        radius: 10
+                        bg_color: color_gray
+                        align: bottom_mid
+                        width: 40
+                        height: 140
+                        min_value: 35
+                        max_value: 100
+                        value: 100
+                        indicator:
+                          bg_color: color_misty_blue
+                          radius: 10
+                        knob:
+                          bg_opa: transp
+                        on_release:
+                          - light.turn_on:
+                              id: display_backlight
+                              brightness: !lambda return int(x)/ 100.0;
+
+              - obj:
+                  id: backlight_settings_sleep_time_background
+                  width: 220
+                  height: 220
+                  align: top_right
+                  clickable: false
+                  radius: 20
+                  pad_all: 0
+                  bg_color: color_slate_blue_gray
+                  border_opa: transp
+                  border_width: 0
+                  shadow_opa: transp
+                  widgets:
+                    - label:  
+                        id: backlight_settings_sleep_time_label
+                        y: 20
+                        align: top_mid
+                        text_font: nunito_18
+                        text_color: color_misty_blue
+                        text: "Sleep time"
+                    - roller:
+                        id: backlight_settings_sleep_time_roller
+                        y: 10
+                        width: 140
+                        align: center
+                        bg_opa: transp
+                        border_opa: transp
+                        shadow_opa: transp
+                        text_font: nunito_20
+                        text_color: color_steel_blue
+                        text_line_space: 4
+                        selected:
+                          bg_opa: transp
+                          text_font: nunito_20
+                          text_color: color_misty_blue
+                        selected_index: !lambda return id(display_timeout);
+                        options:
+                          - Never
+                          - 1 minute
+                          - 5 minutes
+                          - 10 minutes
+                          - 30 minutes
+                          - 1 hour
+                          - 6 hours
+                          - 12 hours
+                        visible_row_count: 1
+                        on_value:
+                            then:
+                              - number.set:
+                                  id: display_timeout_backlight
+                                  value: !lambda |-
+                                    static const int backlight_time[] = {-1, 1, 5, 10, 30, 60, 360, 720};
+                                    return backlight_time[x];
+                              - globals.set:
+                                  id: display_timeout
+                                  value: !lambda return x;
+
+
+  - obj:
+      id: weather_state_images
+      hidden: false
+      y: -6
+      width: 110
+      height: 110
+      align: top_mid
+      clickable: true
+      radius: 0
+      pad_all: 0
+      bg_opa: transp
+      border_opa: transp
+      border_width: 0
+      shadow_opa: transp
+      widgets:
+        - image:
+            id: weather_sunny_image
+            hidden: true
+            y: -9
+            x: 0
+            align: top_mid
+            src: home_weather_sunny_img
+        - image:
+            id: weather_clear_night_image
+            hidden: true
+            y: -9
+            x: 0
+            align: top_mid
+            src: home_weather_clear_night_img
+        - image:
+            id: weather_cloudy_image
+            hidden: true
+            y: 11
+            x: 0
+            align: top_mid
+            src: home_weather_cloudy_img
+        - image:
+            id: weather_cloudy_night_image
+            hidden: true
+            y: 11
+            x: 0
+            align: top_mid
+            src: home_weather_cloudy_night_img
+        - image:
+            id: weather_partlycloudy_sun_image
+            hidden: false
+            y: 1
+            x: 0
+            align: top_mid
+            src: home_weather_partlycloudy_sun_img
+        - image:
+            id: weather_partlycloudy_moon_image
+            hidden: true
+            y: 1
+            x: 0
+            align: top_mid
+            src: home_weather_partlycloudy_moon_img
+        - image:
+            id: weather_rainy_image
+            hidden: true
+            y: 1
+            x: 0
+            align: top_mid
+            src: home_weather_rainy_img
+        - image:
+            id: weather_rainy_night_image
+            hidden: true
+            y: 1
+            x: 0
+            align: top_mid
+            src: home_weather_rainy_night_img
+        - image:
+            id: weather_pouring_image
+            hidden: true
+            y: 1
+            x: 0
+            align: top_mid
+            src: home_weather_pouring_img
+        - image:
+            id: weather_pouring_night_image
+            hidden: true
+            y: 1
+            x: 0
+            align: top_mid
+            src: home_weather_pouring_night_img
+        - image:
+            id: weather_snowy_image
+            hidden: true
+            y: 1
+            x: 0
+            align: top_mid
+            src: home_weather_snowy_img
+        - image:
+            id: weather_snowy_night_image
+            hidden: true
+            y: 1
+            x: 0
+            align: top_mid
+            src: home_weather_snowy_night_img
+        - image:
+            id: weather_snowy_rainy_image
+            hidden: true
+            y: 1
+            x: 0
+            align: top_mid
+            src: home_weather_snowy_rainy_img
+        - image:
+            id: weather_fog_image
+            hidden: true
+            y: 1
+            x: 0
+            align: top_mid
+            src: home_weather_fog_img
+        - image:
+            id: weather_fog_night_image
+            hidden: true
+            y: 1
+            x: 0
+            align: top_mid
+            src: home_weather_fog_night_img
+        - image:
+            id: weather_hail_image
+            hidden: true
+            y: 1
+            x: 0
+            align: top_mid
+            src: home_weather_hail_img
+        - image:
+            id: weather_lightning_image
+            hidden: true
+            y: 1
+            x: 0
+            align: top_mid
+            src: home_weather_lightning_img
+        - image:
+            id: weather_lightning_night_image
+            hidden: true
+            y: 1
+            x: 0
+            align: top_mid
+            src: home_weather_lightning_night_img
+        - image:
+            id: weather_lightning_rainy_image
+            hidden: true
+            y: 1
+            x: 0
+            align: top_mid
+            src: home_weather_lightning_rainy_img
+        - image:
+            id: weather_lightning_rainy_night_image
+            hidden: true
+            y: 1
+            x: 0
+            align: top_mid
+            src: home_weather_lightning_rainy_night_img
+        - image:
+            id: weather_windy_image
+            hidden: true
+            y: -14
+            x: 5
+            align: top_mid
+            src: home_weather_windy_img
+        - image:
+            id: weather_windy_variant_image
+            hidden: true
+            y: 1
+            x: 0
+            align: top_mid
+            src: home_weather_windy_variant_img
+
+  - obj:
+      id: home_actions_card
+      y: 290
+      width: 440
+      height: 100
+      align: top_mid
+      clickable: false
+      scrollable: false
+      radius: 20
+      pad_all: 0
+      bg_color: color_slate_blue_gray
+      border_opa: transp
+      border_width: 0
+      shadow_opa: transp
+      widgets:
+        - obj:
+            id: middle_home_controls
+            width: 440
+            height: 100
+            align: center
+            clickable: false
+            scrollable: false
+            radius: 20
+            pad_all: 0
+            bg_opa: transp
+            border_opa: transp
+            border_width: 0
+            shadow_opa: transp
+            widgets:
+              # LIGHTS BUTTON
+              - obj:
+                  id: home_lights_btn_bg
+                  x: 30
+                  width: 90
+                  height: 90
+                  align: left_mid
+                  pad_all: 0
+                  bg_opa: transp
+                  shadow_opa: transp
+                  border_opa: transp
+                  widgets:
+                    - button:
+                        id: home_lights_button
+                        width: 70
+                        height: 70
+                        align: center
+                        clickable: true
+                        radius: 50
+                        pad_all: 0
+                        bg_opa: transp
+                        border_opa: transp
+                        border_width: 0
+                        shadow_width: 8
+                        shadow_spread: 2
+                        shadow_ofs_y: 0
+                        shadow_color: color_black
+                        shadow_opa: cover
+                        pressed:
+                          bg_color: color_steel_blue
+                          shadow_width: 4
+                        on_click:
+                          - script.execute: go_lights_page
+
+                    - obj:
+                        width: 60
+                        height: 60
+                        align: center
+                        clickable: false
+                        radius: 45
+                        pad_all: 0
+                        bg_opa: transp 
+                        border_opa: transp
+                        shadow_width: 4
+                        shadow_color: 0xFFFFFF
+                        shadow_ofs_x: -4
+                        shadow_ofs_y: -2
+                        shadow_opa: 30%
+
+                    - obj:
+                        width: 65
+                        height: 65
+                        pad_all: 0
+                        align: center
+                        clickable: false
+                        radius: 50
+                        border_opa: transp
+                        bg_color: color_slate_blue_gray
+                        widgets:
+                          - label:
+                              align: center
+                              text_font: mdi_icons_28
+                              text_color: color_misty_blue
+                              id: home_lights_icon
+                              text: "${ceiling_lights_icon}"
+
+              # DEVICES BUTTON
+              - obj:
+                  id: home_dashboard_btn_bg
+                  x: -30
+                  width: 90
+                  height: 90
+                  align: right_mid
+                  pad_all: 0
+                  bg_opa: transp
+                  shadow_opa: transp
+                  border_opa: transp
+                  widgets:
+                    - button:
+                        id: home_dashboard_button
+                        width: 70
+                        height: 70
+                        align: center
+                        clickable: true
+                        radius: 50
+                        pad_all: 0
+                        bg_opa: transp
+                        border_opa: transp
+                        border_width: 0
+                        shadow_width: 8
+                        shadow_spread: 2
+                        shadow_ofs_y: 0
+                        shadow_color: color_black
+                        shadow_opa: cover
+                        pressed:
+                          bg_color: color_steel_blue
+                          shadow_width: 4
+                        on_click:
+                          - script.execute: go_dashboard_page
+
+                    - obj:
+                        width: 60
+                        height: 60
+                        align: center
+                        clickable: false
+                        radius: 45
+                        pad_all: 0
+                        bg_opa: transp 
+                        border_opa: transp
+                        shadow_width: 4
+                        shadow_color: 0xFFFFFF
+                        shadow_ofs_x: -4
+                        shadow_ofs_y: -2
+                        shadow_opa: 30%
+
+                    - obj:
+                        width: 65
+                        height: 65
+                        pad_all: 0
+                        align: center
+                        clickable: false
+                        radius: 50
+                        border_opa: transp
+                        bg_color: color_slate_blue_gray
+                        widgets:
+                          - label:
+                              align: center
+                              text_font: mdi_icons_28
+                              text_color: color_misty_blue
+                              id: home_dashboard_icon
+                              text: "${dashboard_icon}"
+
+        - obj:
+            id: middle_weather_controls
+            hidden: true
+            width: 440
+            height: 200
+            align: center
+            clickable: false
+            radius: 20
+            pad_all: 0
+            bg_color: color_slate_blue_gray
+            border_opa: transp
+            border_width: 0
+            shadow_opa: transp
+            widgets:
+              - obj:
+                  id: weather_forecast_buttons
+                  width: 440
+                  height: 50
+                  align: top_mid
+                  clickable: false
+                  radius: 20
+                  pad_all: 0
+                  bg_opa: transp
+                  border_opa: transp
+                  border_width: 0
+                  shadow_opa: transp
+                  widgets:
+                    - button:
+                        id: weather_forecast_daily_btn
+                        width: 220
+                        height: 30
+                        align: left_mid
+                        clickable: true
+                        radius: 20
+                        pad_all: 0
+                        bg_opa: transp
+                        border_opa: transp
+                        border_width: 0
+                        shadow_opa: transp
+                        widgets:
+                          - label:
+                              id: weather_forecast_daily_label
+                              align: top_mid
+                              text_font: nunito_16
+                              text_color: color_misty_blue
+                              text: "Daily"
+                        on_press:
+                          - lvgl.label.update:
+                              id: weather_forecast_daily_label
+                              text_color: color_misty_blue
+                          - lvgl.label.update:
+                              id: weather_forecast_hourly_label
+                              text_color: color_steel_blue
+                          - lvgl.widget.hide: weather_forecast_hourly
+                          - lvgl.widget.show: weather_forecast_daily
+                    - button:
+                        id: weather_forecast_hourly_btn
+                        width: 220
+                        height: 30
+                        align: right_mid
+                        clickable: true
+                        radius: 20
+                        pad_all: 0
+                        bg_opa: transp
+                        border_opa: transp
+                        border_width: 0
+                        shadow_opa: transp
+                        widgets:
+                          - label:
+                              id: weather_forecast_hourly_label
+                              align: top_mid
+                              text_font: nunito_16
+                              text_color: color_steel_blue
+                              text: "Hourly"
+                        on_press:
+                          - lvgl.label.update:
+                              id: weather_forecast_hourly_label
+                              text_color: color_misty_blue
+                          - lvgl.label.update:
+                              id: weather_forecast_daily_label
+                              text_color: color_steel_blue
+                          - lvgl.widget.hide: weather_forecast_daily
+                          - lvgl.widget.show: weather_forecast_hourly
+
+
+              - obj:
+                  id: weather_forecast_daily
+                  hidden: false
+                  width: 408
+                  height: 160
+                  align: bottom_mid
+                  clickable: false
+                  radius: 20
+                  pad_all: 0
+                  bg_opa: transp
+                  border_opa: transp
+                  border_width: 0
+                  shadow_opa: transp
+                  layout:
+                    type: flex
+                    flex_flow: column
+                    flex_align_main: center
+                    flex_align_cross: center
+                  widgets:
+                    - obj:
+                        hidden: true
+
+              - obj:
+                  id: weather_forecast_hourly
+                  hidden: true
+                  width: 408
+                  height: 160
+                  align: bottom_mid
+                  clickable: false
+                  radius: 20
+                  pad_all: 0
+                  bg_opa: transp
+                  border_opa: transp
+                  border_width: 0
+                  shadow_opa: transp
+                  layout:
+                    type: flex
+                    flex_flow: column
+                    flex_align_main: center
+                    flex_align_cross: center
+                  widgets:
+                    - obj:
+                        hidden: true
+
+  # SYSTEM BUTTONS (DOWN) 
+  - obj:
+      id: menu_controls_background
+      x: 0
+      y: -20
+      width: 440
+      height: 60
+      pad_all: 0
+      align: bottom_mid
+      bg_color: color_slate_blue_gray
+      shadow_opa: transp
+      border_opa: transp
+      border_width: 0
+      radius: 20
+      widgets:
+        - button:
+            id: display_lock_btn
+            clickable: true
+            x: 10
+            width: 50
+            height: 50
+            align: left_mid
+            bg_opa: transp
+            shadow_opa: transp
+            checked:
+              bg_opa: transp
+            widgets:
+              - label:
+                  id: display_lock_indicator
+                  align: center
+                  text_color: color_misty_blue
+                  text_font: mdi_icons_28
+                  text: "${lock_variant_icon}"
+            on_click:
+              - light.turn_off: display_backlight
+
+        - button:
+            id: backlight_brightness_off_btn
+            clickable: true
+            x: 60
+            width: 50
+            height: 50
+            align: left_mid
+            bg_opa: transp
+            shadow_opa: transp
+            widgets:
+              - label:
+                  align: center
+                  text_color: color_misty_blue
+                  text_font: mdi_icons_28
+                  text: "${brightness_icon}"
+            on_click:
+              - delay: 1s
+              - light.turn_off: display_backlight
+              - lvgl.pause:
+
+
+        - button:
+            id: home_widget_btn
+            clickable: true
+            x: 110
+            width: 50
+            height: 50
+            align: left_mid
+            bg_opa: transp
+            shadow_opa: transp
+            widgets:
+              - label:
+                  align: center
+                  text_color: color_misty_blue
+                  text_font: mdi_icons_28
+                  text: "${home_icon}"
+            on_click:
+              - script.execute: go_home_page
+
+        - button:
+            id: weather_widget_btn
+            clickable: true
+            x: -110
+            width: 50
+            height: 50
+            align: right_mid
+            bg_opa: transp
+            shadow_opa: transp
+            widgets:
+              - label:
+                  align: center
+                  text_color: color_misty_blue
+                  text_font: mdi_icons_28
+                  text: "${weather_icon}"
+            on_click:
+              - script.execute: go_dashboard_page
+
+
+        - button:
+            id: info_widget_btn
+            clickable: true
+            x: -60
+            width: 50
+            height: 50
+            align: right_mid
+            bg_opa: transp
+            shadow_opa: transp
+            widgets:
+              - label:
+                  align: center
+                  text_color: color_misty_blue
+                  text_font: mdi_icons_28
+                  text: "${info_icon}"
+            on_click:
+              - script.execute: go_dashboard_page
+
+        - button:
+            id: settings_widget_btn
+            clickable: true
+            x: -10
+            width: 50
+            height: 50
+            align: right_mid
+            bg_opa: transp
+            shadow_opa: transp
+            widgets:
+              - label:
+                  align: center
+                  text_color: color_misty_blue
+                  text_font: mdi_icons_28
+                  text: "${settings_icon}"
+            on_click:
+              - script.execute: go_settings_page
+
+  # CIRCLE
+  - obj:
+      id: home_center_ring
+      y: 100
+      width: 150
+      height: 150
+      align: center
+      clickable: false
+      radius: 75
+      pad_all: 0
+      bg_color: color_black
+      border_opa: transp
+      border_width: 0
+      shadow_opa: transp
+      widgets:
+        - obj:
+            width: 100
+            height: 100
+            pad_all: 0
+            align: center
+            clickable: false
+            radius: 50
+            border_opa: transp
+            bg_color: color_slate_blue_gray
+
+
+        - obj:
+            id: circle_home_widget
+            hidden: false
+            width: 150
+            height: 150
+            align: center
+            clickable: false
+            radius: 75
+            pad_all: 0
+            bg_opa: transp
+            border_opa: transp
+            border_width: 0
+            shadow_opa: transp
+            widgets:
+              - arc:
+                  id: home_temp_arc
+                  clickable: false
+                  adjustable: false
+                  adv_hittest: false
+                  align: center
+                  width: 130
+                  height: 130
+                  start_angle: 180
+                  end_angle: 360
+                  arc_width: 5
+                  arc_color: color_red
+                  arc_rounded: false
+              - arc:
+                  id: home_humidity_arc
+                  clickable: false
+                  adjustable: false
+                  adv_hittest: false
+                  align: center
+                  width: 130
+                  height: 130
+                  start_angle: 0
+                  end_angle: 180
+                  arc_width: 5
+                  arc_color: color_blue
+                  arc_rounded: false
+
+              - obj:
+                  width: 100
+                  height: 100
+                  pad_all: 0
+                  align: center
+                  clickable: false
+                  radius: 50
+                  border_opa: transp
+                  bg_opa: transp
+                  widgets:
+                    - label:
+                        y: 15
+                        id: home_center_temp_label
+                        align: top_mid
+                        text_font: nunito_20
+                        text_color: color_misty_blue
+                        text: "22.5°"
+                    - label:
+                        y: -15
+                        id: home_center_humidity_label
+                        align: bottom_mid
+                        text_font: nunito_20
+                        text_color: color_misty_blue
+                        text: "62 %"
+                    - obj:
+                        id: home_center_line
+                        width: 74
+                        height: 2
+                        align: center
+                        bg_color: color_misty_blue
+                        border_opa: transp
+                        shadow_opa: transp
+
+        - obj:
+            id: circle_info_widget
+            hidden: true
+            width: 150
+            height: 150
+            align: center
+            clickable: false
+            radius: 75
+            pad_all: 0
+            bg_opa: transp
+            border_opa: transp
+            border_width: 0
+            shadow_opa: transp
+            widgets:
+              - arc:
+                  id: circle_info_widget_cpu_arc
+                  clickable: false
+                  adjustable: false
+                  adv_hittest: false
+                  align: center
+                  width: 130
+                  height: 130
+                  start_angle: 0
+                  end_angle: 360
+                  arc_width: 5
+                  arc_color: color_yellow
+                  arc_rounded: false
+
+              - obj:
+                  width: 100
+                  height: 100
+                  pad_all: 0
+                  align: center
+                  clickable: false
+                  radius: 50
+                  border_opa: transp
+                  bg_opa: transp
+                  widgets:
+                    - label:
+                        y: 15
+                        id: circle_info_widget_cpu_label
+                        align: top_mid
+                        text_font: nunito_20
+                        text_color: color_misty_blue
+                        text: "CPU"
+                    - label:
+                        y: -15
+                        id: circle_info_widget_cpu_state_value
+                        align: bottom_mid
+                        text_font: nunito_20
+                        text_color: color_misty_blue
+                        text: "38.5°"
+                    - obj:
+                        id: circle_info_widget_line
+                        width: 74
+                        height: 2
+                        align: center
+                        bg_color: color_misty_blue
+                        border_opa: transp
+                        shadow_opa: transp
+
+        - obj:
+            id: circle_settings_widget
+            hidden: true
+            width: 150
+            height: 150
+            align: center
+            clickable: false
+            radius: 75
+            pad_all: 0
+            bg_opa: transp
+            border_opa: transp
+            border_width: 0
+            shadow_opa: transp
+            widgets:
+              - arc:
+                  id: circle_settings_widget_lang_arc
+                  clickable: false
+                  adjustable: false
+                  adv_hittest: false
+                  align: center
+                  width: 130
+                  height: 130
+                  start_angle: 0
+                  end_angle: 360
+                  arc_width: 5
+                  arc_color: color_misty_blue
+                  arc_rounded: false
+
+              - button:
+                  id: circle_settings_widget_lang_btn
+                  width: 100
+                  height: 100
+                  pad_all: 0
+                  align: center
+                  clickable: true
+                  radius: 50
+                  border_opa: transp
+                  bg_opa: transp
+                  shadow_opa: transp
+                  checked:
+                    bg_opa: transp
+                  widgets:
+                    - image:
+                        id: circle_settings_widget_lang_flag
+                        align: center
+                        src: splash_homeassistant_img
+                  on_click:
+                    - script.execute: go_settings_page

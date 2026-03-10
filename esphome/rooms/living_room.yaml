@@ -1,0 +1,8 @@
+substitutions:
+  room_name: "Living Room"
+  ha_area_id: living_room
+  ha_temp_entity: sensor.living_room_temperature
+  ha_cover_entity: cover.living_room_blinds
+
+packages:
+  room_template: !include _template.yaml

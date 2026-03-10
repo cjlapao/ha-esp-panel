@@ -1,0 +1,2 @@
+packages:
+  guition_ui: !include guition_ui/main.yaml

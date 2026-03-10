@@ -1,0 +1,23 @@
+# OS/editor
+.DS_Store
+.vscode/
+.idea/
+
+# Python / venv
+.venv/
+venv/
+bin/
+include/
+lib/
+path/
+pyvenv.cfg
+__pycache__/
+*.pyc
+
+# ESPHome build artifacts
+.esphome/
+*.bin
+*.elf
+
+# Local secrets
+esphome/secrets.yaml

@@ -1,0 +1,4 @@
+- !include pages/home_page.yaml
+- !include pages/lights_page.yaml
+- !include pages/dashboard_page.yaml
+- !include pages/settings_page.yaml

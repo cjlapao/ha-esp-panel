@@ -1,0 +1,7 @@
+# Shared UI package placeholder.
+#
+# Future iterations should add:
+# - display (MIPI RGB / ST7701S)
+# - touchscreen (GT911)
+# - lvgl pages and styles
+# - animations (blinds/weather/transition effects)

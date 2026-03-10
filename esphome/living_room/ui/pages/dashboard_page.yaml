@@ -1,0 +1,373 @@
+id: dashboard_page
+widgets:
+  - obj:
+      id: root_card
+      width: 480
+      height: 480
+      pad_all: 12
+      border_opa: TRANSP
+      radius: 0
+      bg_color: 0x0f172a
+      scrollable: false
+      scrollbar_mode: "OFF"
+      layout:
+        type: FLEX
+        flex_flow: COLUMN
+        flex_align_main: START
+        flex_align_cross: CENTER
+        flex_align_track: START
+      widgets:
+        - obj:
+            width: 456
+            height: 58
+            bg_opa: TRANSP
+            border_opa: TRANSP
+            pad_all: 0
+            scrollable: false
+            scrollbar_mode: "OFF"
+            layout:
+              type: FLEX
+              flex_flow: ROW
+              flex_align_main: SPACE_BETWEEN
+              flex_align_cross: CENTER
+            widgets:
+              - label:
+                  id: room_title
+                  text: "${room_name}"
+                  text_color: 0xf8fafc
+                  text_font: montserrat_28
+              - button:
+                  id: dashboard_theme_button
+                  width: 92
+                  height: 38
+                  radius: 18
+                  bg_color: 0x1d4ed8
+                  shadow_width: 8
+                  shadow_opa: 35%
+                  shadow_color: 0x0f172a
+                  widgets:
+                    - label:
+                        align: CENTER
+                        text: "Theme"
+                        text_font: montserrat_14
+                  on_click:
+                    - script.execute: go_settings_page
+
+        - obj:
+            width: 456
+            height: 88
+            bg_opa: TRANSP
+            border_opa: TRANSP
+            pad_all: 0
+            scrollable: false
+            scrollbar_mode: "OFF"
+            layout:
+              type: GRID
+              grid_columns: [FR(1), FR(1), FR(1)]
+              grid_rows: [FR(1), FR(1)]
+            widgets:
+              - label:
+                  id: wifi_status_label
+                  grid_cell_column_pos: 0
+                  grid_cell_row_pos: 0
+                  text: "WiFi --"
+                  text_color: 0x94a3b8
+                  text_font: montserrat_14
+              - label:
+                  id: api_status_label
+                  grid_cell_column_pos: 1
+                  grid_cell_row_pos: 0
+                  text: "HA --"
+                  text_color: 0xef4444
+                  text_align: CENTER
+                  text_font: montserrat_14
+              - label:
+                  id: presence_label
+                  grid_cell_column_pos: 2
+                  grid_cell_row_pos: 0
+                  text: "Presence 0/3"
+                  text_color: 0x94a3b8
+                  text_align: RIGHT
+                  text_font: montserrat_14
+              - label:
+                  id: wifi_detail_label
+                  grid_cell_column_pos: 0
+                  grid_cell_row_pos: 1
+                  text: "SSID: --"
+                  text_color: 0x94a3b8
+                  text_font: montserrat_12
+              - label:
+                  id: ip_detail_label
+                  grid_cell_column_pos: 2
+                  grid_cell_row_pos: 1
+                  text: "IP: --"
+                  text_color: 0x94a3b8
+                  text_align: RIGHT
+                  text_font: montserrat_12
+
+        - obj:
+            id: lights_card
+            width: 456
+            height: 112
+            radius: 18
+            border_width: 1
+            border_color: 0x334155
+            bg_color: 0x1e293b
+            shadow_width: 10
+            shadow_opa: 30%
+            shadow_color: 0x020617
+            pad_all: 10
+            scrollable: false
+            scrollbar_mode: "OFF"
+            layout:
+              type: GRID
+              grid_columns: [FR(1), FR(1), FR(1), FR(1)]
+              grid_rows: [FR(1)]
+            widgets:
+              - button:
+                  id: light_btn_1
+                  grid_cell_column_pos: 0
+                  grid_cell_row_pos: 0
+                  radius: 14
+                  bg_color: 0x334155
+                  shadow_width: 4
+                  shadow_opa: 20%
+                  widgets:
+                    - label:
+                        align: CENTER
+                        text: "Dining"
+                        text_font: montserrat_16
+                  on_click:
+                    - homeassistant.action:
+                        action: light.toggle
+                        data:
+                          entity_id: ${light_1_entity}
+              - button:
+                  id: light_btn_2
+                  grid_cell_column_pos: 1
+                  grid_cell_row_pos: 0
+                  radius: 14
+                  bg_color: 0x334155
+                  shadow_width: 4
+                  shadow_opa: 20%
+                  widgets:
+                    - label:
+                        align: CENTER
+                        text: "Sofa"
+                        text_font: montserrat_16
+                  on_click:
+                    - homeassistant.action:
+                        action: light.toggle
+                        data:
+                          entity_id: ${light_2_entity}
+              - button:
+                  id: light_btn_3
+                  grid_cell_column_pos: 2
+                  grid_cell_row_pos: 0
+                  radius: 14
+                  bg_color: 0x334155
+                  shadow_width: 4
+                  shadow_opa: 20%
+                  widgets:
+                    - label:
+                        align: CENTER
+                        text: "Wall"
+                        text_font: montserrat_16
+                  on_click:
+                    - homeassistant.action:
+                        action: light.toggle
+                        data:
+                          entity_id: ${light_3_entity}
+              - button:
+                  id: light_btn_4
+                  grid_cell_column_pos: 3
+                  grid_cell_row_pos: 0
+                  radius: 14
+                  bg_color: 0x334155
+                  shadow_width: 4
+                  shadow_opa: 20%
+                  widgets:
+                    - label:
+                        align: CENTER
+                        text: "TV"
+                        text_font: montserrat_16
+                  on_click:
+                    - homeassistant.action:
+                        action: light.toggle
+                        data:
+                          entity_id: ${light_4_entity}
+
+        - obj:
+            id: blinds_card
+            width: 456
+            height: 150
+            radius: 18
+            border_width: 1
+            border_color: 0x334155
+            bg_color: 0x1e293b
+            shadow_width: 10
+            shadow_opa: 30%
+            shadow_color: 0x020617
+            pad_all: 8
+            scrollable: false
+            scrollbar_mode: "OFF"
+            layout:
+              type: FLEX
+              flex_flow: COLUMN
+              flex_align_main: SPACE_EVENLY
+              flex_align_cross: START
+            widgets:
+              - bar:
+                  id: left_cover_bar
+                  min_value: 0
+                  max_value: 100
+                  value: 0
+                  height: 16
+                  indicator:
+                    bg_color: 0x0ea5e9
+              - bar:
+                  id: center_cover_bar
+                  min_value: 0
+                  max_value: 100
+                  value: 0
+                  height: 16
+                  indicator:
+                    bg_color: 0x0ea5e9
+              - bar:
+                  id: right_cover_bar
+                  min_value: 0
+                  max_value: 100
+                  value: 0
+                  height: 16
+                  indicator:
+                    bg_color: 0x0ea5e9
+              - obj:
+                  bg_opa: TRANSP
+                  border_opa: TRANSP
+                  pad_all: 0
+                  height: 58
+                  scrollable: false
+                  scrollbar_mode: "OFF"
+                  layout:
+                    type: GRID
+                    grid_columns: [FR(1), FR(1), FR(1), FR(1), FR(1), FR(1)]
+                    grid_rows: [FR(1)]
+                  widgets:
+                    - button:
+                        grid_cell_column_pos: 0
+                        radius: 12
+                        widgets:
+                          - label:
+                              align: CENTER
+                              text: "L+"
+                        on_click:
+                          - homeassistant.action:
+                              action: cover.open_cover
+                              data:
+                                entity_id: ${cover_left_entity}
+                    - button:
+                        grid_cell_column_pos: 1
+                        radius: 12
+                        widgets:
+                          - label:
+                              align: CENTER
+                              text: "L-"
+                        on_click:
+                          - homeassistant.action:
+                              action: cover.close_cover
+                              data:
+                                entity_id: ${cover_left_entity}
+                    - button:
+                        grid_cell_column_pos: 2
+                        radius: 12
+                        widgets:
+                          - label:
+                              align: CENTER
+                              text: "C+"
+                        on_click:
+                          - homeassistant.action:
+                              action: cover.open_cover
+                              data:
+                                entity_id: ${cover_center_entity}
+                    - button:
+                        grid_cell_column_pos: 3
+                        radius: 12
+                        widgets:
+                          - label:
+                              align: CENTER
+                              text: "C-"
+                        on_click:
+                          - homeassistant.action:
+                              action: cover.close_cover
+                              data:
+                                entity_id: ${cover_center_entity}
+                    - button:
+                        grid_cell_column_pos: 4
+                        radius: 12
+                        widgets:
+                          - label:
+                              align: CENTER
+                              text: "R+"
+                        on_click:
+                          - homeassistant.action:
+                              action: cover.open_cover
+                              data:
+                                entity_id: ${cover_right_entity}
+                    - button:
+                        grid_cell_column_pos: 5
+                        radius: 12
+                        widgets:
+                          - label:
+                              align: CENTER
+                              text: "R-"
+                        on_click:
+                          - homeassistant.action:
+                              action: cover.close_cover
+                              data:
+                                entity_id: ${cover_right_entity}
+
+        - obj:
+            id: footer_card
+            width: 456
+            height: 116
+            radius: 18
+            border_width: 1
+            border_color: 0x334155
+            bg_color: 0x1e293b
+            shadow_width: 10
+            shadow_opa: 30%
+            shadow_color: 0x020617
+            pad_all: 10
+            scrollable: false
+            scrollbar_mode: "OFF"
+            layout:
+              type: GRID
+              grid_columns: [FR(1), FR(1)]
+              grid_rows: [FR(1), FR(1)]
+            widgets:
+              - label:
+                  id: temp_value_label
+                  grid_cell_column_pos: 0
+                  grid_cell_row_pos: 0
+                  text: "--.- C"
+                  text_color: 0xf8fafc
+              - label:
+                  id: lux_value_label
+                  grid_cell_column_pos: 1
+                  grid_cell_row_pos: 0
+                  text: "-- lx"
+                  text_align: RIGHT
+                  text_color: 0xf8fafc
+              - label:
+                  id: down_value_label
+                  grid_cell_column_pos: 0
+                  grid_cell_row_pos: 1
+                  text: "DL --"
+                  text_color: 0x94a3b8
+              - label:
+                  id: up_value_label
+                  grid_cell_column_pos: 1
+                  grid_cell_row_pos: 1
+                  text: "UL --"
+                  text_align: RIGHT
+                  text_color: 0x94a3b8

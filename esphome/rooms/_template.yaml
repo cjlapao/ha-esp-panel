@@ -1,0 +1,43 @@
+substitutions:
+  room_name: "Room"
+  ha_area_id: room
+  ha_temp_entity: sensor.room_temperature
+  ha_cover_entity: cover.room_blinds
+
+sensor:
+  - platform: homeassistant
+    id: room_temperature
+    entity_id: ${ha_temp_entity}
+
+button:
+  - platform: template
+    name: "${room_name} All Lights Off"
+    on_press:
+      - homeassistant.action:
+          action: light.turn_off
+          data:
+            area_id: ${ha_area_id}
+
+  - platform: template
+    name: "${room_name} Blinds Open"
+    on_press:
+      - homeassistant.action:
+          action: cover.open_cover
+          data:
+            entity_id: ${ha_cover_entity}
+
+  - platform: template
+    name: "${room_name} Blinds Close"
+    on_press:
+      - homeassistant.action:
+          action: cover.close_cover
+          data:
+            entity_id: ${ha_cover_entity}
+
+  - platform: template
+    name: "${room_name} Blinds Stop"
+    on_press:
+      - homeassistant.action:
+          action: cover.stop_cover
+          data:
+            entity_id: ${ha_cover_entity}
