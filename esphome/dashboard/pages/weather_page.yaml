@@ -1,6 +1,7 @@
 id: weather_page
 bg_color: color_slate_blue_gray
 scrollable: false
+
 widgets:
   - obj:
       id: weather_page_bg
@@ -323,4 +324,3 @@ widgets:
                   on_click:
                     then:
                       - script.execute: go_settings_page
-

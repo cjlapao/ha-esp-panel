@@ -1,0 +1,112 @@
+globals:
+  - id: wifi_connected_flag
+    type: bool
+    restore_value: false
+    initial_value: 'false'
+  - id: api_connected_flag
+    type: bool
+    restore_value: false
+    initial_value: 'false'
+  - id: splash_done
+    type: bool
+    restore_value: false
+    initial_value: 'false'
+  - id: wifi_retry_count
+    type: int
+    restore_value: false
+    initial_value: '0'
+  - id: api_retry_count
+    type: int
+    restore_value: false
+    initial_value: '0'
+  - id: boot_elapsed_sec
+    type: int
+    restore_value: false
+    initial_value: '0'
+  - id: inactivity_seconds
+    type: int
+    restore_value: false
+    initial_value: '0'
+  - id: active_page_id
+    type: int
+    restore_value: false
+    initial_value: '0'
+  - id: theme_name
+    type: std::string
+    restore_value: true
+    initial_value: '"slate"'
+  - id: theme_accent_color
+    type: uint32_t
+    restore_value: true
+    initial_value: 0x${tw_slate_500}
+  - id: theme_background_color
+    type: uint32_t
+    restore_value: true
+    initial_value: 0x${tw_slate_950}
+  - id: theme_panel_color
+    type: uint32_t
+    restore_value: true
+    initial_value: 0x${tw_slate_900}
+  - id: theme_border_color
+    type: uint32_t
+    restore_value: true
+    initial_value: 0x${tw_slate_700}
+  - id: theme_button_color
+    type: uint32_t
+    restore_value: true
+    initial_value: 0x${tw_slate_700}
+  - id: theme_text_color
+    type: uint32_t
+    restore_value: true
+    initial_value: 0x${tw_slate_200}
+  - id: theme_muted_color
+    type: uint32_t
+    restore_value: true
+    initial_value: 0x${tw_slate_400}
+  - id: theme_icon_idle_color
+    type: uint32_t
+    restore_value: true
+    initial_value: 0x${tw_slate_500}
+  - id: display_timeout
+    type: int
+    restore_value: true
+    initial_value: '2'
+  - id: backlight_dimmed
+    type: bool
+    restore_value: false
+    initial_value: 'false'
+  - id: backlight_restore_brightness
+    type: float
+    restore_value: false
+    initial_value: '1.0'
+  - id: current_mode
+    type: int
+    initial_value: '0'
+    restore_value: true
+  - id: is_animating
+    type: bool
+    initial_value: 'false'
+    restore_value: false
+
+  # Forecast daily data
+  - id: forecast_daily_count
+    type: int
+    initial_value: '0'
+  - id: forecast_daily_timestamps
+    type: time_t[10]
+  - id: forecast_daily_temps
+    type: float[10]
+  - id: forecast_daily_conditions
+    type: std::string[10]
+
+  # Forecast hourly data
+  - id: forecast_hourly_count
+    type: int
+    initial_value: '0'
+  - id: forecast_hourly_timestamps
+    type: time_t[15]
+  - id: forecast_hourly_temps
+    type: float[15]
+  - id: forecast_hourly_conditions
+    type: std::string[15]
+

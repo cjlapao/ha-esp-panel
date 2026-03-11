@@ -1119,7 +1119,7 @@ widgets:
             shadow_opa: transp
             widgets:
               - arc:
-                  id: home_temp_arc
+                  id: home_temp_arc_fixed
                   clickable: false
                   adjustable: false
                   adv_hittest: false
@@ -1130,6 +1130,19 @@ widgets:
                   end_angle: 300
                   arc_width: 5
                   arc_color: color_red
+                  arc_rounded: false
+              - arc:
+                  id: home_temp_arc_2
+                  clickable: false
+                  adjustable: false
+                  adv_hittest: false
+                  align: center
+                  width: 130
+                  height: 130
+                  start_angle: 300
+                  end_angle: 360
+                  arc_width: 5
+                  arc_color: color_amber
                   arc_rounded: false
               - arc:
                   id: home_humidity_arc

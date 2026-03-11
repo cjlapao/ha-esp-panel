@@ -1,0 +1,109 @@
+obj:
+  id: shared_bottom_bar
+  hidden: true
+  width: 440
+  height: 60
+  align: BOTTOM_MID
+  y: -20
+  radius: 20
+  bg_color: color_slate_blue_gray
+  border_opa: TRANSP
+  border_width: 0
+  scrollable: false
+  scrollbar_mode: "OFF"
+  pad_all: 0
+  widgets:
+    - button:
+        id: shared_home_btn
+        clickable: true
+        x: 110
+        width: 52
+        height: 50
+        align: LEFT_MID
+        bg_opa: TRANSP
+        shadow_opa: TRANSP
+        on_click:
+          - script.execute: go_home_page
+        widgets:
+          - label:
+              id: bottom_home_icon
+              align: CENTER
+              text: "${home_icon}"
+              text_font: mdi_icons_28
+              text_color: color_misty_blue
+    - button:
+        id: shared_lock_btn
+        clickable: true
+        x: 10
+        width: 52
+        height: 50
+        align: LEFT_MID
+        bg_opa: TRANSP
+        shadow_opa: TRANSP
+        on_click:
+          - logger.log: "[ui] Lock button pressed (screen off)"
+          - light.turn_off: display_backlight
+        widgets:
+          - label:
+              id: bottom_lock_icon
+              align: CENTER
+              text: "${lock_variant_icon}"
+              text_font: mdi_icons_28
+              text_color: color_misty_blue
+    - button:
+        id: shared_power_btn
+        clickable: true
+        x: 60
+        width: 52
+        height: 50
+        align: LEFT_MID
+        bg_opa: TRANSP
+        shadow_opa: TRANSP
+        on_click:
+          - delay: 1s
+          - light.turn_off: display_backlight
+          - lvgl.pause:
+          - logger.log: "[ui] Screen off pressed"
+        widgets:
+          - label:
+              id: bottom_power_icon
+              align: CENTER
+              text: "${brightness_icon}"
+              text_font: mdi_icons_28
+              text_color: color_misty_blue
+    - button:
+        id: shared_info_btn
+        clickable: true
+        x: -60
+        width: 52
+        height: 50
+        align: RIGHT_MID
+        bg_opa: TRANSP
+        shadow_opa: TRANSP
+        on_click:
+          - script.execute: go_dashboard_page
+        widgets:
+          - label:
+              id: bottom_info_icon
+              align: CENTER
+              text: "${info_icon}"
+              text_font: mdi_icons_28
+              text_color: color_misty_blue
+    - button:
+        id: shared_settings_btn
+        clickable: true
+        x: -10
+        width: 52
+        height: 50
+        align: RIGHT_MID
+        bg_opa: TRANSP
+        shadow_opa: TRANSP
+        on_click:
+          - script.execute: go_settings_page
+        widgets:
+          - label:
+              id: bottom_settings_icon
+              align: CENTER
+              text: "${settings_icon}"
+              text_font: mdi_icons_28
+              text_color: color_misty_blue

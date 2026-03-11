@@ -1,0 +1,5 @@
+- !include home_page.yaml
+- !include lights_page.yaml
+- !include dashboard_page.yaml
+- !include settings_page.yaml
+- !include weather_page.yaml

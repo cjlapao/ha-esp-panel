@@ -1,0 +1,82 @@
+binary_sensor:
+  - platform: status
+    id: api_connected
+    name: "${room_name} API Connected"
+    on_state:
+      - lambda: |-
+          id(api_connected_flag) = id(api_connected).state;
+          if (id(api_connected).state) {
+            id(api_retry_count) = 0;
+          } else if (id(wifi_connected_flag)) {
+            id(api_retry_count) += 1;
+          }
+      - logger.log:
+          format: "[api] State changed: %s"
+          args: ['id(api_connected).state ? "connected" : "disconnected"']
+      - lvgl.label.update:
+          id: api_status_label
+          text: !lambda |-
+            return id(api_connected).state ? std::string("HA: Online") : std::string("HA: Offline");
+      - lvgl.label.update:
+          id: api_status_label
+          text_color: !lambda |-
+            return id(api_connected).state ? lv_color_hex(0x22c55e) : lv_color_hex(0xef4444);
+      - lvgl.label.update:
+          id: ha_icon_shared
+          text_color: !lambda |-
+            return id(api_connected).state ? lv_color_hex(0x22c55e) : lv_color_hex(id(theme_icon_idle_color));
+      - lvgl.label.update:
+          id: ha_status
+          text_color: !lambda |-
+            return id(api_connected).state ? lv_color_hex(0x22c55e) : lv_color_hex(id(theme_icon_idle_color));
+      - lvgl.label.update:
+          id: splash_status_line
+          text: !lambda |-
+            if (id(api_connected).state) return std::string("System online. Loading dashboard...");
+            if (id(wifi_connected_flag)) return std::string("WiFi up, waiting for API...");
+            return std::string("Connecting to WiFi...");
+      - script.execute: update_splash_retry_line
+      - script.execute: maybe_finish_boot
+
+  - platform: homeassistant
+    id: light_1_state
+    entity_id: ${light_1_entity}
+    on_state:
+      - script.execute: refresh_lights
+
+  - platform: homeassistant
+    id: light_2_state
+    entity_id: ${light_2_entity}
+    on_state:
+      - script.execute: refresh_lights
+
+  - platform: homeassistant
+    id: light_3_state
+    entity_id: ${light_3_entity}
+    on_state:
+      - script.execute: refresh_lights
+
+  - platform: homeassistant
+    id: light_4_state
+    entity_id: ${light_4_entity}
+    on_state:
+      - script.execute: refresh_lights
+
+  - platform: homeassistant
+    id: presence_1
+    entity_id: ${presence_1_entity}
+    on_state:
+      - script.execute: refresh_presence
+
+  - platform: homeassistant
+    id: presence_2
+    entity_id: ${presence_2_entity}
+    on_state:
+      - script.execute: refresh_presence
+
+  - platform: homeassistant
+    id: presence_3
+    entity_id: ${presence_3_entity}
+    on_state:
+      - script.execute: refresh_presence
+

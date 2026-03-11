@@ -1,0 +1,58 @@
+obj:
+  id: splash_layer
+  width: 480
+  height: 480
+  bg_color: 0x2b3249
+  border_opa: TRANSP
+  radius: 0
+  scrollable: false
+  scrollbar_mode: "OFF"
+  pad_all: 0
+  widgets:
+    - image:
+        align: TOP_MID
+        y: 56
+        src: splash_homeassistant_img
+    - obj:
+        align: CENTER
+        y: 16
+        width: 420
+        height: 150
+        bg_opa: TRANSP
+        border_opa: TRANSP
+        scrollable: false
+        scrollbar_mode: "OFF"
+        pad_all: 0
+        widgets:
+          - spinner:
+              id: splash_spinner
+              align: TOP_MID
+              y: 0
+              width: 68
+              height: 68
+              spin_time: 2s
+              arc_length: 70deg
+              arc_width: 7
+              arc_color: 0x55628f
+              indicator:
+                arc_color: 0x8fa2d4
+                arc_width: 7
+          - label:
+              id: splash_status_line
+              align: TOP_MID
+              y: 84
+              text: "Connecting to WiFi..."
+              text_font: montserrat_28
+              text_color: 0xb7c1df
+          - label:
+              id: splash_retry_line
+              align: TOP_MID
+              y: 120
+              hidden: true
+              text: "Retries WiFi 0 | API 0"
+              text_font: montserrat_18
+              text_color: 0x7f8eb3
+    - image:
+        align: BOTTOM_MID
+        y: -30
+        src: splash_esphome_img

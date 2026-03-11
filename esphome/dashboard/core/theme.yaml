@@ -1,0 +1,261 @@
+image:
+  - file: "assets/images/splashscreen/homeassistant.png"
+    id: splash_homeassistant_img
+    type: rgb565
+    resize: 330x68
+    transparency: alpha_channel
+
+  - file: "assets/images/splashscreen/esphome.png"
+    id: splash_esphome_img
+    type: rgb565
+    resize: 290x86
+    transparency: alpha_channel
+
+  # Weather PNG pack mapping (128x128).
+  # For icon families with -1/-2/-3 variants, we standardize on -3.
+  - file: "assets/images/weather/clear-day.png"
+    id: home_weather_sunny_img
+    type: rgb565
+    resize: 128x128
+    transparency: alpha_channel
+
+  - file: "assets/images/weather/clear-night.png"
+    id: home_weather_clear_night_img
+    type: rgb565
+    resize: 128x128
+    transparency: alpha_channel
+
+  - file: "assets/images/weather/cloudy-3-day.png"
+    id: home_weather_cloudy_img
+    type: rgb565
+    resize: 128x128
+    transparency: alpha_channel
+
+  - file: "assets/images/weather/cloudy-3-night.png"
+    id: home_weather_cloudy_night_img
+    type: rgb565
+    resize: 128x128
+    transparency: alpha_channel
+
+  - file: "assets/images/weather/cloudy-2-day.png"
+    id: home_weather_partlycloudy_sun_img
+    type: rgb565
+    resize: 128x128
+    transparency: alpha_channel
+
+  - file: "assets/images/weather/cloudy-1-night.png"
+    id: home_weather_partlycloudy_moon_img
+    type: rgb565
+    resize: 128x128
+    transparency: alpha_channel
+
+  - file: "assets/images/weather/rainy-3-day.png"
+    id: home_weather_rainy_img
+    type: rgb565
+    resize: 128x128
+    transparency: alpha_channel
+
+  - file: "assets/images/weather/rainy-3-night.png"
+    id: home_weather_rainy_night_img
+    type: rgb565
+    resize: 128x128
+    transparency: alpha_channel
+
+  - file: "assets/images/weather/rainy-3-day.png"
+    id: home_weather_pouring_img
+    type: rgb565
+    resize: 128x128
+    transparency: alpha_channel
+
+  - file: "assets/images/weather/rainy-3-night.png"
+    id: home_weather_pouring_night_img
+    type: rgb565
+    resize: 128x128
+    transparency: alpha_channel
+
+  - file: "assets/images/weather/snowy-3-day.png"
+    id: home_weather_snowy_img
+    type: rgb565
+    resize: 128x128
+    transparency: alpha_channel
+
+  - file: "assets/images/weather/snowy-3-night.png"
+    id: home_weather_snowy_night_img
+    type: rgb565
+    resize: 128x128
+    transparency: alpha_channel
+
+  - file: "assets/images/weather/rain-and-snow-mix.png"
+    id: home_weather_snowy_rainy_img
+    type: rgb565
+    resize: 128x128
+    transparency: alpha_channel
+
+  - file: "assets/images/weather/fog-day.png"
+    id: home_weather_fog_img
+    type: rgb565
+    resize: 128x128
+    transparency: alpha_channel
+
+  - file: "assets/images/weather/fog-night.png"
+    id: home_weather_fog_night_img
+    type: rgb565
+    resize: 128x128
+    transparency: alpha_channel
+
+  - file: "assets/images/weather/hail.png"
+    id: home_weather_hail_img
+    type: rgb565
+    resize: 128x128
+    transparency: alpha_channel
+
+  - file: "assets/images/weather/isolated-thunderstorms-day.png"
+    id: home_weather_lightning_img
+    type: rgb565
+    resize: 128x128
+    transparency: alpha_channel
+
+  - file: "assets/images/weather/isolated-thunderstorms-night.png"
+    id: home_weather_lightning_night_img
+    type: rgb565
+    resize: 128x128
+    transparency: alpha_channel
+
+  - file: "assets/images/weather/scattered-thunderstorms-day.png"
+    id: home_weather_lightning_rainy_img
+    type: rgb565
+    resize: 128x128
+    transparency: alpha_channel
+
+  - file: "assets/images/weather/scattered-thunderstorms-night.png"
+    id: home_weather_lightning_rainy_night_img
+    type: rgb565
+    resize: 128x128
+    transparency: alpha_channel
+
+  - file: "assets/images/weather/wind.png"
+    id: home_weather_windy_img
+    type: rgb565
+    resize: 128x128
+    transparency: alpha_channel
+
+  - file: "assets/images/weather/wind.png"
+    id: home_weather_windy_variant_img
+    type: rgb565
+    resize: 128x128
+    transparency: alpha_channel
+
+  - file: "assets/images/weather/windsock.png"
+    id: home_windsock_img
+    type: rgb565
+    resize: 34x16
+    transparency: alpha_channel
+
+color:
+  - id: color_slate_blue_gray
+    hex: 0F172A
+  - id: color_steel_blue
+    hex: "334155"
+  - id: color_misty_blue
+    hex: CBD5E1
+
+font:
+  - file: "assets/fonts/Nunito-SemiBold.ttf"
+    id: nunito_16
+    size: 16
+    bpp: 4
+    glyphsets:
+      - GF_Latin_Core
+
+  - file: "assets/fonts/Nunito-SemiBold.ttf"
+    id: nunito_18
+    size: 18
+    bpp: 4
+    glyphsets:
+      - GF_Latin_Core
+
+  - file: "assets/fonts/Nunito-SemiBold.ttf"
+    id: nunito_20
+    size: 20
+    bpp: 4
+    glyphsets:
+      - GF_Latin_Core
+
+  - file: "assets/fonts/Nunito-SemiBold.ttf"
+    id: nunito_36
+    size: 36
+    bpp: 4
+    glyphsets:
+      - GF_Latin_Core
+
+  - file: "assets/fonts/Nunito-SemiBold.ttf"
+    id: nunito_48
+    size: 48
+    bpp: 4
+    glyphsets:
+      - GF_Latin_Core
+
+  - file: "assets/fonts/Nunito-SemiBold.ttf"
+    id: nunito_64
+    size: 64
+    bpp: 4
+    glyphsets:
+      - GF_Latin_Core
+
+  - file: "assets/fonts/icons_v2.ttf"
+    id: icons_24
+    size: 24
+    bpp: 4
+    glyphs:
+      - "\U0000e92e" # lock
+      - "\U0000e93b" # air_conditioner
+      - "\U0000e936" # heating
+      - "\U0000e934" # wifi_100
+      - "\U0000e938" # humidity
+
+  - file: "assets/fonts/materialdesignicons-webfont.ttf"
+    id: mdi_icons_24
+    size: 24
+    bpp: 4
+    glyphs:
+      - "\U000F07D0" # home assistant
+      - "\U000F0498" # shield
+
+  - file: "assets/fonts/materialdesignicons-webfont.ttf"
+    id: mdi_icons_28
+    size: 28
+    bpp: 4
+    glyphs:
+      - "\U000F18DD" # ceiling lights
+      - "\U000F056E" # devices
+      - "\U000F0341" # display lock
+      - "\U000F1A4D" # display brightness
+      - "\U000F06A1" # display home
+      - "\U000F18F6" # display weather
+      - "\U000F1C70" # info
+      - "\U000F08BB" # settings
+
+  - file: "assets/fonts/materialdesignicons-webfont.ttf"
+    id: mdi_26
+    size: 26
+    glyphs:
+      - "\U000F05A9" # wifi
+      - "\U000F07D0" # home assistant
+      - "\U000F033E" # lock
+      - "\U000F0425" # power
+      - "\U000F06A1" # home
+      - "\U000F08BB" # settings
+      - "\U000F1C70" # info
+      - "\U000F08DD" # lights
+      - "\U000F056E" # dashboard
+      - "\U000F0498" # shield
+      - "\U000F001B" # air conditioner
+      - "\U000F0438" # radiator
+
+light:
+  - platform: monochromatic
+    output: backlight_output
+    id: display_backlight
+    name: "${room_name} Display Backlight"
+    default_transition_length: 0s
+    restore_mode: ALWAYS_ON

@@ -1,0 +1,199 @@
+text_sensor:
+  - platform: homeassistant
+    id: weather_state_text
+    entity_id: ${weather_entity}
+    on_value:
+      - lvgl.label.update:
+          id: home_weather_state_label
+          text: !lambda |-
+            if (id(weather_state_text).state.empty()) return std::string("--");
+            return id(weather_state_text).state;
+      - script.execute: update_home_weather_image
+
+  - platform: homeassistant
+    id: weather_forecast_daily_sensor
+    entity_id: ${weather_forecast_daily_entity}
+    attribute: forecasts
+    internal: true
+    on_value:
+      then:
+        - script.execute: parse_daily_forecasts
+
+  - platform: homeassistant
+    id: weather_forecast_hourly_sensor
+    entity_id: ${weather_forecast_hourly_entity}
+    attribute: forecasts
+    internal: true
+    on_value:
+      then:
+        - script.execute: parse_hourly_forecasts
+
+sensor:
+  - platform: homeassistant
+    id: weather_temp_outside
+    entity_id: ${weather_entity}
+    attribute: temperature
+    on_value:
+      - lvgl.label.update:
+          id: home_outside_temp_label
+          text:
+            format: "%.0f°"
+            args: [id(weather_temp_outside).state]
+
+  - platform: homeassistant
+    id: weather_humidity_outside
+    entity_id: ${weather_entity}
+    attribute: humidity
+    on_value:
+      - lvgl.label.update:
+          id: home_humidity_label
+          text:
+            format: "%.0f%%"
+            args: [id(weather_humidity_outside).state]
+      - lvgl.label.update:
+          id: home_center_humidity_label
+          text:
+            format: "%.0f%%"
+            args: [id(weather_humidity_outside).state]
+
+  - platform: homeassistant
+    id: weather_wind_outside
+    entity_id: ${weather_entity}
+    attribute: wind_speed
+    on_value:
+      - lvgl.label.update:
+          id: home_wind_label
+          text:
+            format: "%.0f"
+            args: [id(weather_wind_outside).state]
+      - lvgl.label.update:
+          id: weather_wind_speed_unit
+          text: "m/s"
+
+  - platform: homeassistant
+    id: room_temperature
+    entity_id: ${temp_entity}
+    on_value:
+      - lvgl.label.update:
+          id: temp_value_label
+          text:
+            format: "%.1f C"
+            args: [id(room_temperature).state]
+      - lvgl.label.update:
+          id: home_center_temp_label
+          text:
+            format: "%.1f°"
+            args: [id(room_temperature).state]
+      - lambda: |-
+          // 1. Calculate the cutoff angle (e.g., from 0.0 to 30.0 degrees C)
+          // It scales along the 180 to 300 degree angle path.
+          float cutoff = calculate_arc_angle(x, 0.0, 30.0, 180.0, 300.0);
+
+          // 2. Set the primary red arc to END at the cutoff
+          lv_arc_set_bg_end_angle(id(home_temp_arc_fixed), cutoff);
+
+          // 3. Set the secondary blue arc to START at the cutoff
+          lv_arc_set_bg_start_angle(id(home_temp_arc_2), cutoff);
+
+  - platform: homeassistant
+    id: room_light_level
+    entity_id: ${light_level_entity}
+    on_value:
+      - lvgl.label.update:
+          id: lux_value_label
+          text:
+            format: "%.0f lx"
+            args: [id(room_light_level).state]
+
+  - platform: homeassistant
+    id: net_download
+    entity_id: ${internet_download_entity}
+    on_value:
+      - lvgl.label.update:
+          id: down_value_label
+          text:
+            format: "DL %.1f Mbps"
+            args: [id(net_download).state]
+
+  - platform: homeassistant
+    id: net_upload
+    entity_id: ${internet_upload_entity}
+    on_value:
+      - lvgl.label.update:
+          id: up_value_label
+          text:
+            format: "UL %.1f Mbps"
+            args: [id(net_upload).state]
+
+  - platform: homeassistant
+    id: cover_left_pos
+    entity_id: ${cover_left_entity}
+    attribute: current_position
+    on_value:
+      - script.execute: refresh_covers
+
+  - platform: homeassistant
+    id: cover_center_pos
+    entity_id: ${cover_center_entity}
+    attribute: current_position
+    on_value:
+      - script.execute: refresh_covers
+
+  - platform: homeassistant
+    id: cover_right_pos
+    entity_id: ${cover_right_entity}
+    attribute: current_position
+    on_value:
+      - script.execute: refresh_covers
+
+select:
+  - platform: template
+    id: theme_accent_select
+    name: "${room_name} Theme Accent"
+    optimistic: true
+    restore_value: true
+    initial_option: slate
+    options:
+      - slate
+      - gray
+      - zinc
+      - neutral
+      - stone
+      - red
+      - orange
+      - amber
+      - yellow
+      - lime
+      - green
+      - emerald
+      - teal
+      - cyan
+      - sky
+      - blue
+      - indigo
+      - violet
+      - purple
+      - fuchsia
+      - pink
+      - rose
+    on_value:
+      - lambda: |-
+          id(theme_name) = x;
+          id(inactivity_seconds) = 0;
+      - logger.log:
+          format: "[theme] Requested accent: %s"
+          args: ["x.c_str()"]
+      - script.execute: apply_selected_theme
+
+number:
+  - platform: template
+    id: display_timeout_backlight
+    name: "${room_name} Backlight Timeout"
+    optimistic: true
+    unit_of_measurement: "m"
+    initial_value: 10
+    restore_value: true
+    min_value: -1
+    max_value: 720
+    step: 1
+    mode: box

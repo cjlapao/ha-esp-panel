@@ -2,7 +2,7 @@
 # dashboard_living_room_sdl.yaml - SDL2 entrypoint with mock data
 # ============================================================
 packages:
-  base: !include living_room/living_room_base.yaml
+  base: !include dashboard/_base.yaml
 
 substitutions:
   node_name: panel-living-room-sdl
@@ -22,7 +22,6 @@ esphome:
           id(wifi_connected_flag) = true;
           id(api_connected_flag) = true;
       - lvgl.widget.hide: splash_layer
-
       # Inject mock sensor values
       - lvgl.label.update:
           id: temp_value_label

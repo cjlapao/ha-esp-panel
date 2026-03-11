@@ -1,0 +1,135 @@
+# ============================================================
+# _base.yaml - Shared logic for all platforms
+# ============================================================
+substitutions:
+  node_name: panel-living-room
+  friendly_name: Living Room Panel
+  room_name: Living Room
+
+  # Device fallback relays (update to real pins for your board wiring)
+
+  # Home Assistant entities
+  weather_entity: weather.forecast_home
+  weather_forecast_daily_entity: sensor.weather_forecast_daily
+  weather_forecast_hourly_entity: sensor.weather_forecast_hourly
+  temp_entity: sensor.living_room_temperature
+  light_level_entity: sensor.living_room_presence_sensor_light_sensor_light_level
+  internet_download_entity: sensor.internet_download_mbps
+  internet_upload_entity: sensor.internet_upload_mbps
+
+  light_1_entity: light.dining_light
+  light_2_entity: light.sofa_light
+  light_3_entity: light.living_room_wall_lights
+  light_4_entity: light.tv_stand_leds
+
+  cover_left_entity: cover.left_living_room_blind
+  cover_center_entity: cover.center_living_room_blind
+  cover_right_entity: cover.right_living_room_blind
+
+  presence_1_entity: binary_sensor.office_left_presence_sensor_sofa
+  presence_2_entity: binary_sensor.office_presence_sensor_sofa
+  presence_3_entity: binary_sensor.living_room_presence_sensor_presence_sensor_4
+
+  # Guition home icon substitutions
+  lock_icon: "\U0000e92e"
+  lock_variant_icon: "\U000F0341"
+  air_conditioner_icon: "\U0000e93b"
+  heating_icon: "\U0000e936"
+  ha_icon: "\U000F07D0"
+  wifi_100_icon: "\U0000e934"
+  humidity_icon: "\U0000e938"
+  ceiling_lights_icon: "\U000F18DD"
+  dashboard_icon: "\U000F056E"
+  brightness_icon: "\U000F1A4D"
+  home_icon: "\U000F06A1"
+  weather_icon: "\U000F18F6"
+  info_icon: "\U000F1C70"
+  settings_icon: "\U000F08BB"
+  shield_arming_icon: "\U000F0498"
+  windsock_icon: "\U000F15FA"
+
+  <<: !include theme/tailwind_palette.yaml
+
+esphome:
+  name: ${node_name}
+  friendly_name: ${friendly_name}
+  compile_process_limit: 1
+  project:
+    name: home.panel_controller
+    version: "0.2.0-native"
+  includes:
+    - dashboard/core/helpers.h
+  on_boot:
+    priority: 300
+    then:
+      - logger.log: "[boot] Starting splash boot sequence"
+      - lvgl.widget.show: splash_layer
+      - lvgl.label.update:
+          id: splash_status_line
+          text: "Connecting to WiFi..."
+      - lvgl.widget.hide: splash_retry_line
+      - lvgl.label.update:
+          id: splash_retry_line
+          text: "Retries WiFi 0 | API 0"
+      - script.execute: apply_selected_theme
+
+color: !include theme/colors.yaml
+
+logger:
+  level: DEBUG
+  baud_rate: 115200
+  logs:
+    wifi: DEBUG
+    api: DEBUG
+
+api:
+  encryption:
+    key: !secret api_encryption_key
+
+packages:
+  theme: !include core/theme.yaml
+  globals: !include core/globals.yaml
+  binary_sensors: !include services/binary_sensors.yaml
+  sensors: !include services/sensors.yaml
+  scripts: !include services/scripts.yaml
+  # animations: !include core/animations.yaml
+
+lvgl:
+  displays:
+    - panel_display
+  touchscreens:
+    - touchscreen_id: touch_id
+  page_wrap: false
+  top_layer:
+    widgets:
+      - !include components/top_bar.yaml
+      - !include components/bottom_bar.yaml
+      - !include components/splash_screen.yaml
+  pages: !include pages/index.yaml
+
+interval:
+  - interval: 1s
+    then:
+      - lambda: |-
+          id(inactivity_seconds) += 1;
+      - lambda: |-
+          if (!id(backlight_dimmed) && id(display_backlight).current_values.is_on()) {
+            float current = id(display_backlight).current_values.get_brightness();
+            if (current > 0.01f) {
+              id(backlight_restore_brightness) = current;
+            }
+          }
+      - script.execute: dim_backlight_for_inactivity
+      - if:
+          condition:
+            lambda: 'return id(inactivity_seconds) > 20 && id(active_page_id) != 0;'
+          then:
+            - logger.log: "[ui] Inactivity timeout -> home page"
+            - script.execute: go_home_page
+
+
+  - interval: 8s
+    then:
+      - script.execute: refresh_lights
+      - script.execute: refresh_covers
+      - script.execute: refresh_presence
