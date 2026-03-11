@@ -4,8 +4,8 @@ widgets:
       id: settings_root_bg
       width: 480
       height: 480
-      bg_color: 0x000000
-      border_opa: TRANSP
+      bg_color: color_black
+      border_opa: transp
       radius: 0
       scrollable: false
       scrollbar_mode: "OFF"
@@ -13,13 +13,13 @@ widgets:
   - obj:
       id: settings_card
       width: 440
-      height: 360
-      y: 44
-      align: TOP_MID
-      radius: 24
-      bg_color: 0x2b3249
+      height: 330
+      y: 60
+      align: top_mid
+      radius: 20
+      bg_color: color_slate_blue_gray
       border_width: 1
-      border_color: 0x3d4867
+      border_color: color_steel_blue
       pad_all: 0
       scrollable: false
       scrollbar_mode: "OFF"
@@ -27,117 +27,443 @@ widgets:
         - label:
             id: settings_title_label
             x: 20
-            y: 18
+            y: 12
             text: "Theme"
-            text_font: montserrat_34
-            text_color: 0xc7d2fe
+            text_font: nunito_20
+            text_color: color_misty_blue
         - label:
             id: settings_subtitle_label
             x: 20
-            y: 60
+            y: 50
             text: "Tailwind accent palette"
-            text_font: montserrat_20
-            text_color: 0x94a3b8
+            text_font: nunito_18
+            text_color: color_misty_blue
+
         - obj:
             id: settings_theme_selector_row
             x: 20
-            y: 92
+            y: 78
             width: 400
-            height: 88
+            height: 132
             radius: 18
-            bg_color: 0x0f172a
+            bg_color: color_black
             border_width: 1
-            border_color: 0x334155
+            border_color: color_steel_blue
             scrollable: false
             scrollbar_mode: "OFF"
             widgets:
-              - button:
-                  id: settings_theme_prev_button
-                  x: 10
-                  y: 16
-                  width: 70
-                  height: 56
-                  radius: 14
-                  bg_color: 0x334155
-                  on_click:
-                    - select.previous: theme_accent_select
-                  widgets:
-                    - label:
-                        align: CENTER
-                        text: "Prev"
-                        text_font: montserrat_18
-                        text_color: 0xe2e8f0
               - label:
                   id: settings_theme_value_label
-                  align: CENTER
-                  y: -12
+                  align: top_mid
+                  y: 8
                   text: "slate"
-                  text_font: montserrat_24
-                  text_color: 0xe2e8f0
-              - label:
-                  id: settings_theme_hex_label
-                  align: CENTER
-                  y: 18
-                  text: "#64748B"
-                  text_font: montserrat_18
-                  text_color: 0x94a3b8
-              - button:
-                  id: settings_theme_next_button
-                  x: 320
-                  y: 16
-                  width: 70
-                  height: 56
-                  radius: 14
-                  bg_color: 0x334155
-                  on_click:
-                    - select.next: theme_accent_select
+                  text_font: nunito_20
+                  text_color: color_misty_blue
+
+              - obj:
+                  id: settings_theme_palette
+                  x: 2
+                  y: 34
+                  width: 384
+                  height: 94
+                  bg_opa: transp
+                  border_opa: transp
+                  scrollable: false
+                  scrollbar_mode: "OFF"
+                  layout:
+                    type: GRID
+                    grid_columns: [34, 34, 34, 34, 34, 34, 34, 34, 34, 34, 34]
+                    grid_rows: [44, 44]
                   widgets:
-                    - label:
-                        align: CENTER
-                        text: "Next"
-                        text_font: montserrat_18
-                        text_color: 0xe2e8f0
+                    - button:
+                        id: settings_chip_slate
+                        grid_cell_column_pos: 0
+                        grid_cell_row_pos: 0
+                        width: 22
+                        height: 22
+                        radius: 11
+                        bg_color: 0x${tw_slate_500}
+                        border_width: 1
+                        border_color: color_steel_blue
+                        shadow_opa: transp
+                        pad_all: 0
+                        on_click:
+                          - select.set:
+                              id: theme_accent_select
+                              option: "slate"
+                    - button:
+                        id: settings_chip_gray
+                        grid_cell_column_pos: 1
+                        grid_cell_row_pos: 0
+                        width: 22
+                        height: 22
+                        radius: 11
+                        bg_color: 0x${tw_gray_500}
+                        border_width: 1
+                        border_color: color_steel_blue
+                        shadow_opa: transp
+                        pad_all: 0
+                        on_click:
+                          - select.set:
+                              id: theme_accent_select
+                              option: "gray"
+                    - button:
+                        id: settings_chip_zinc
+                        grid_cell_column_pos: 2
+                        grid_cell_row_pos: 0
+                        width: 22
+                        height: 22
+                        radius: 11
+                        bg_color: 0x${tw_zinc_500}
+                        border_width: 1
+                        border_color: color_steel_blue
+                        shadow_opa: transp
+                        pad_all: 0
+                        on_click:
+                          - select.set:
+                              id: theme_accent_select
+                              option: "zinc"
+                    - button:
+                        id: settings_chip_neutral
+                        grid_cell_column_pos: 3
+                        grid_cell_row_pos: 0
+                        width: 22
+                        height: 22
+                        radius: 11
+                        bg_color: 0x${tw_neutral_500}
+                        border_width: 1
+                        border_color: color_steel_blue
+                        shadow_opa: transp
+                        pad_all: 0
+                        on_click:
+                          - select.set:
+                              id: theme_accent_select
+                              option: "neutral"
+                    - button:
+                        id: settings_chip_stone
+                        grid_cell_column_pos: 4
+                        grid_cell_row_pos: 0
+                        width: 22
+                        height: 22
+                        radius: 11
+                        bg_color: 0x${tw_stone_500}
+                        border_width: 1
+                        border_color: color_steel_blue
+                        shadow_opa: transp
+                        pad_all: 0
+                        on_click:
+                          - select.set:
+                              id: theme_accent_select
+                              option: "stone"
+                    - button:
+                        id: settings_chip_red
+                        grid_cell_column_pos: 5
+                        grid_cell_row_pos: 0
+                        width: 22
+                        height: 22
+                        radius: 11
+                        bg_color: 0x${tw_red_500}
+                        border_width: 1
+                        border_color: color_steel_blue
+                        shadow_opa: transp
+                        pad_all: 0
+                        on_click:
+                          - select.set:
+                              id: theme_accent_select
+                              option: "red"
+                    - button:
+                        id: settings_chip_orange
+                        grid_cell_column_pos: 6
+                        grid_cell_row_pos: 0
+                        width: 22
+                        height: 22
+                        radius: 11
+                        bg_color: 0x${tw_orange_500}
+                        border_width: 1
+                        border_color: color_steel_blue
+                        shadow_opa: transp
+                        pad_all: 0
+                        on_click:
+                          - select.set:
+                              id: theme_accent_select
+                              option: "orange"
+                    - button:
+                        id: settings_chip_amber
+                        grid_cell_column_pos: 7
+                        grid_cell_row_pos: 0
+                        width: 22
+                        height: 22
+                        radius: 11
+                        bg_color: 0x${tw_amber_500}
+                        border_width: 1
+                        border_color: color_steel_blue
+                        shadow_opa: transp
+                        pad_all: 0
+                        on_click:
+                          - select.set:
+                              id: theme_accent_select
+                              option: "amber"
+                    - button:
+                        id: settings_chip_yellow
+                        grid_cell_column_pos: 8
+                        grid_cell_row_pos: 0
+                        width: 22
+                        height: 22
+                        radius: 11
+                        bg_color: 0x${tw_yellow_500}
+                        border_width: 1
+                        border_color: color_steel_blue
+                        shadow_opa: transp
+                        pad_all: 0
+                        on_click:
+                          - select.set:
+                              id: theme_accent_select
+                              option: "yellow"
+                    - button:
+                        id: settings_chip_lime
+                        grid_cell_column_pos: 9
+                        grid_cell_row_pos: 0
+                        width: 22
+                        height: 22
+                        radius: 11
+                        bg_color: 0x${tw_lime_500}
+                        border_width: 1
+                        border_color: color_steel_blue
+                        shadow_opa: transp
+                        pad_all: 0
+                        on_click:
+                          - select.set:
+                              id: theme_accent_select
+                              option: "lime"
+                    - button:
+                        id: settings_chip_green
+                        grid_cell_column_pos: 10
+                        grid_cell_row_pos: 0
+                        width: 22
+                        height: 22
+                        radius: 11
+                        bg_color: 0x${tw_green_500}
+                        border_width: 1
+                        border_color: color_steel_blue
+                        shadow_opa: transp
+                        pad_all: 0
+                        on_click:
+                          - select.set:
+                              id: theme_accent_select
+                              option: "green"
+
+                    - button:
+                        id: settings_chip_emerald
+                        grid_cell_column_pos: 0
+                        grid_cell_row_pos: 1
+                        width: 22
+                        height: 22
+                        radius: 11
+                        bg_color: 0x${tw_emerald_500}
+                        border_width: 1
+                        border_color: color_steel_blue
+                        shadow_opa: transp
+                        pad_all: 0
+                        on_click:
+                          - select.set:
+                              id: theme_accent_select
+                              option: "emerald"
+                    - button:
+                        id: settings_chip_teal
+                        grid_cell_column_pos: 1
+                        grid_cell_row_pos: 1
+                        width: 22
+                        height: 22
+                        radius: 11
+                        bg_color: 0x${tw_teal_500}
+                        border_width: 1
+                        border_color: color_steel_blue
+                        shadow_opa: transp
+                        pad_all: 0
+                        on_click:
+                          - select.set:
+                              id: theme_accent_select
+                              option: "teal"
+                    - button:
+                        id: settings_chip_cyan
+                        grid_cell_column_pos: 2
+                        grid_cell_row_pos: 1
+                        width: 22
+                        height: 22
+                        radius: 11
+                        bg_color: 0x${tw_cyan_500}
+                        border_width: 1
+                        border_color: color_steel_blue
+                        shadow_opa: transp
+                        pad_all: 0
+                        on_click:
+                          - select.set:
+                              id: theme_accent_select
+                              option: "cyan"
+                    - button:
+                        id: settings_chip_sky
+                        grid_cell_column_pos: 3
+                        grid_cell_row_pos: 1
+                        width: 22
+                        height: 22
+                        radius: 11
+                        bg_color: 0x${tw_sky_500}
+                        border_width: 1
+                        border_color: color_steel_blue
+                        shadow_opa: transp
+                        pad_all: 0
+                        on_click:
+                          - select.set:
+                              id: theme_accent_select
+                              option: "sky"
+                    - button:
+                        id: settings_chip_blue
+                        grid_cell_column_pos: 4
+                        grid_cell_row_pos: 1
+                        width: 22
+                        height: 22
+                        radius: 11
+                        bg_color: 0x${tw_blue_500}
+                        border_width: 1
+                        border_color: color_steel_blue
+                        shadow_opa: transp
+                        pad_all: 0
+                        on_click:
+                          - select.set:
+                              id: theme_accent_select
+                              option: "blue"
+                    - button:
+                        id: settings_chip_indigo
+                        grid_cell_column_pos: 5
+                        grid_cell_row_pos: 1
+                        width: 22
+                        height: 22
+                        radius: 11
+                        bg_color: 0x${tw_indigo_500}
+                        border_width: 1
+                        border_color: color_steel_blue
+                        shadow_opa: transp
+                        pad_all: 0
+                        on_click:
+                          - select.set:
+                              id: theme_accent_select
+                              option: "indigo"
+                    - button:
+                        id: settings_chip_violet
+                        grid_cell_column_pos: 6
+                        grid_cell_row_pos: 1
+                        width: 22
+                        height: 22
+                        radius: 11
+                        bg_color: 0x${tw_violet_500}
+                        border_width: 1
+                        border_color: color_steel_blue
+                        shadow_opa: transp
+                        pad_all: 0
+                        on_click:
+                          - select.set:
+                              id: theme_accent_select
+                              option: "violet"
+                    - button:
+                        id: settings_chip_purple
+                        grid_cell_column_pos: 7
+                        grid_cell_row_pos: 1
+                        width: 22
+                        height: 22
+                        radius: 11
+                        bg_color: 0x${tw_purple_500}
+                        border_width: 1
+                        border_color: color_steel_blue
+                        shadow_opa: transp
+                        pad_all: 0
+                        on_click:
+                          - select.set:
+                              id: theme_accent_select
+                              option: "purple"
+                    - button:
+                        id: settings_chip_fuchsia
+                        grid_cell_column_pos: 8
+                        grid_cell_row_pos: 1
+                        width: 22
+                        height: 22
+                        radius: 11
+                        bg_color: 0x${tw_fuchsia_500}
+                        border_width: 1
+                        border_color: color_steel_blue
+                        shadow_opa: transp
+                        pad_all: 0
+                        on_click:
+                          - select.set:
+                              id: theme_accent_select
+                              option: "fuchsia"
+                    - button:
+                        id: settings_chip_pink
+                        grid_cell_column_pos: 9
+                        grid_cell_row_pos: 1
+                        width: 22
+                        height: 22
+                        radius: 11
+                        bg_color: 0x${tw_pink_500}
+                        border_width: 1
+                        border_color: color_steel_blue
+                        shadow_opa: transp
+                        pad_all: 0
+                        on_click:
+                          - select.set:
+                              id: theme_accent_select
+                              option: "pink"
+                    - button:
+                        id: settings_chip_rose
+                        grid_cell_column_pos: 10
+                        grid_cell_row_pos: 1
+                        width: 22
+                        height: 22
+                        radius: 11
+                        bg_color: 0x${tw_rose_500}
+                        border_width: 1
+                        border_color: color_steel_blue
+                        shadow_opa: transp
+                        pad_all: 0
+                        on_click:
+                          - select.set:
+                              id: theme_accent_select
+                              option: "rose"
+
         - obj:
             id: settings_preview_panel
             x: 20
-            y: 198
+            y: 244
             width: 400
-            height: 108
-            radius: 18
-            bg_color: 0x0f172a
+            height: 72
+            radius: 16
+            bg_color: color_black
             border_width: 1
-            border_color: 0x334155
+            border_color: color_steel_blue
             scrollable: false
             scrollbar_mode: "OFF"
             widgets:
               - obj:
                   id: settings_preview_accent_dot
-                  x: 22
-                  y: 36
-                  width: 36
-                  height: 36
-                  radius: 18
+                  x: 16
+                  y: 22
+                  width: 28
+                  height: 28
+                  radius: 14
                   bg_color: 0x64748b
-                  border_opa: TRANSP
+                  border_opa: transp
                   scrollable: false
                   scrollbar_mode: "OFF"
               - label:
                   id: settings_preview_text
-                  x: 74
-                  y: 28
-                  text: "Auto dark shades from accent"
-                  text_font: montserrat_20
-                  text_color: 0xe2e8f0
+                  x: 56
+                  y: 14
+                  text: "Theme applies immediately"
+                  text_font: nunito_18
+                  text_color: color_misty_blue
               - label:
                   id: settings_hint_label
-                  x: 74
-                  y: 58
-                  text: "BG, panel, border computed"
-                  text_font: montserrat_16
-                  text_color: 0x94a3b8
-        - label:
-            x: 20
-            y: 318
-            text: "Default theme: slate"
-            text_font: montserrat_16
-            text_color: 0x94a3b8
+                  x: 56
+                  y: 38
+                  text: "Tap a color circle"
+                  text_font: nunito_16
+                  text_color: color_misty_blue

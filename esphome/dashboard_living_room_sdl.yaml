@@ -1,0 +1,1904 @@
+substitutions:
+  node_name: panel-living-room-sdl
+  friendly_name: Living Room Panel
+  room_name: Living Room
+
+  # Device fallback relays (update to real pins for your board wiring)
+  relay_1_pin: GPIO1
+  relay_2_pin: GPIO2
+
+  # Home Assistant entities
+  weather_entity: weather.forecast_home
+  temp_entity: sensor.living_room_temperature
+  light_level_entity: sensor.living_room_presence_sensor_light_sensor_light_level
+  internet_download_entity: sensor.internet_download_mbps
+  internet_upload_entity: sensor.internet_upload_mbps
+
+  light_1_entity: light.dining_light
+  light_2_entity: light.sofa_light
+  light_3_entity: light.living_room_wall_lights
+  light_4_entity: light.tv_stand_leds
+
+  cover_left_entity: cover.left_living_room_blind
+  cover_center_entity: cover.center_living_room_blind
+  cover_right_entity: cover.right_living_room_blind
+
+  presence_1_entity: binary_sensor.office_left_presence_sensor_sofa
+  presence_2_entity: binary_sensor.office_presence_sensor_sofa
+  presence_3_entity: binary_sensor.living_room_presence_sensor_presence_sensor_4
+
+  # Guition home icon substitutions
+  lock_icon: "\U0000e92e"
+  lock_variant_icon: "\U000F0341"
+  air_conditioner_icon: "\U0000e93b"
+  heating_icon: "\U0000e936"
+  ha_icon: "\U000F07D0"
+  wifi_100_icon: "\U0000e934"
+  humidity_icon: "\U0000e938"
+  ceiling_lights_icon: "\U000F18DD"
+  dashboard_icon: "\U000F056E"
+  brightness_icon: "\U000F1A4D"
+  home_icon: "\U000F06A1"
+  weather_icon: "\U000F18F6"
+  info_icon: "\U000F1C70"
+  settings_icon: "\U000F08BB"
+  shield_arming_icon: "\U000F0498"
+  windsock_icon: "\U000F15FA"
+
+  <<: !include living_room/theme/tailwind_palette.yaml
+
+esphome:
+  name: ${node_name}
+  friendly_name: ${friendly_name}
+  compile_process_limit: 1
+  project:
+    name: home.panel_controller
+    version: "0.2.0-native"
+  on_boot:
+    priority: 300
+    then:
+      - logger.log: "[sdl] SDL mode: skipping splash, dashboard ready"
+      - lambda: |-
+          id(splash_done) = true;
+      - lvgl.widget.hide: splash_layer
+      - script.execute: apply_selected_theme
+
+logger:
+  level: DEBUG
+  baud_rate: 115200
+  logs:
+    wifi: DEBUG
+    api: DEBUG
+
+api:
+  encryption:
+    key: !secret api_encryption_key
+
+image:
+  - file: "assets/images/splashscreen/homeassistant.png"
+    id: splash_homeassistant_img
+    type: rgb565
+    resize: 330x68
+    transparency: alpha_channel
+
+  - file: "assets/images/splashscreen/esphome.png"
+    id: splash_esphome_img
+    type: rgb565
+    resize: 290x86
+    transparency: alpha_channel
+
+  # Weather PNG pack mapping (128x128).
+  # For icon families with -1/-2/-3 variants, we standardize on -3.
+  - file: "assets/images/weather/clear-day.png"
+    id: home_weather_sunny_img
+    type: rgb565
+    resize: 128x128
+    transparency: alpha_channel
+
+  - file: "assets/images/weather/clear-night.png"
+    id: home_weather_clear_night_img
+    type: rgb565
+    resize: 128x128
+    transparency: alpha_channel
+
+  - file: "assets/images/weather/cloudy-3-day.png"
+    id: home_weather_cloudy_img
+    type: rgb565
+    resize: 128x128
+    transparency: alpha_channel
+
+  - file: "assets/images/weather/cloudy-3-night.png"
+    id: home_weather_cloudy_night_img
+    type: rgb565
+    resize: 128x128
+    transparency: alpha_channel
+
+  - file: "assets/images/weather/cloudy-2-day.png"
+    id: home_weather_partlycloudy_sun_img
+    type: rgb565
+    resize: 128x128
+    transparency: alpha_channel
+
+  - file: "assets/images/weather/cloudy-1-night.png"
+    id: home_weather_partlycloudy_moon_img
+    type: rgb565
+    resize: 128x128
+    transparency: alpha_channel
+
+  - file: "assets/images/weather/rainy-3-day.png"
+    id: home_weather_rainy_img
+    type: rgb565
+    resize: 128x128
+    transparency: alpha_channel
+
+  - file: "assets/images/weather/rainy-3-night.png"
+    id: home_weather_rainy_night_img
+    type: rgb565
+    resize: 128x128
+    transparency: alpha_channel
+
+  - file: "assets/images/weather/rainy-3-day.png"
+    id: home_weather_pouring_img
+    type: rgb565
+    resize: 128x128
+    transparency: alpha_channel
+
+  - file: "assets/images/weather/rainy-3-night.png"
+    id: home_weather_pouring_night_img
+    type: rgb565
+    resize: 128x128
+    transparency: alpha_channel
+
+  - file: "assets/images/weather/snowy-3-day.png"
+    id: home_weather_snowy_img
+    type: rgb565
+    resize: 128x128
+    transparency: alpha_channel
+
+  - file: "assets/images/weather/snowy-3-night.png"
+    id: home_weather_snowy_night_img
+    type: rgb565
+    resize: 128x128
+    transparency: alpha_channel
+
+  - file: "assets/images/weather/rain-and-snow-mix.png"
+    id: home_weather_snowy_rainy_img
+    type: rgb565
+    resize: 128x128
+    transparency: alpha_channel
+
+  - file: "assets/images/weather/fog-day.png"
+    id: home_weather_fog_img
+    type: rgb565
+    resize: 128x128
+    transparency: alpha_channel
+
+  - file: "assets/images/weather/fog-night.png"
+    id: home_weather_fog_night_img
+    type: rgb565
+    resize: 128x128
+    transparency: alpha_channel
+
+  - file: "assets/images/weather/hail.png"
+    id: home_weather_hail_img
+    type: rgb565
+    resize: 128x128
+    transparency: alpha_channel
+
+  - file: "assets/images/weather/isolated-thunderstorms-day.png"
+    id: home_weather_lightning_img
+    type: rgb565
+    resize: 128x128
+    transparency: alpha_channel
+
+  - file: "assets/images/weather/isolated-thunderstorms-night.png"
+    id: home_weather_lightning_night_img
+    type: rgb565
+    resize: 128x128
+    transparency: alpha_channel
+
+  - file: "assets/images/weather/scattered-thunderstorms-day.png"
+    id: home_weather_lightning_rainy_img
+    type: rgb565
+    resize: 128x128
+    transparency: alpha_channel
+
+  - file: "assets/images/weather/scattered-thunderstorms-night.png"
+    id: home_weather_lightning_rainy_night_img
+    type: rgb565
+    resize: 128x128
+    transparency: alpha_channel
+
+  - file: "assets/images/weather/wind.png"
+    id: home_weather_windy_img
+    type: rgb565
+    resize: 128x128
+    transparency: alpha_channel
+
+  - file: "assets/images/weather/wind.png"
+    id: home_weather_windy_variant_img
+    type: rgb565
+    resize: 128x128
+    transparency: alpha_channel
+
+  - file: "guition_ui/assets/images/weather/windsock.png"
+    id: home_windsock_img
+    type: rgb565
+    resize: 34x16
+    transparency: alpha_channel
+
+color:
+  - id: color_slate_blue_gray
+    hex: 0F172A
+  - id: color_steel_blue
+    hex: "334155"
+  - id: color_misty_blue
+    hex: CBD5E1
+  - id: color_black
+    hex: 0D0D0D
+  - id: color_gray
+    hex: "666666"
+  - id: color_blue
+    hex: 38BDF8
+  - id: color_red
+    hex: FF0000
+  - id: color_yellow
+    hex: EAB308
+
+font:
+  - file: "guition_ui/assets/fonts/Nunito-SemiBold.ttf"
+    id: nunito_16
+    size: 16
+    bpp: 4
+    glyphsets:
+      - GF_Latin_Core
+
+  - file: "guition_ui/assets/fonts/Nunito-SemiBold.ttf"
+    id: nunito_18
+    size: 18
+    bpp: 4
+    glyphsets:
+      - GF_Latin_Core
+
+  - file: "guition_ui/assets/fonts/Nunito-SemiBold.ttf"
+    id: nunito_20
+    size: 20
+    bpp: 4
+    glyphsets:
+      - GF_Latin_Core
+
+  - file: "guition_ui/assets/fonts/Nunito-SemiBold.ttf"
+    id: nunito_36
+    size: 36
+    bpp: 4
+    glyphsets:
+      - GF_Latin_Core
+
+  - file: "guition_ui/assets/fonts/Nunito-SemiBold.ttf"
+    id: nunito_48
+    size: 48
+    bpp: 4
+    glyphsets:
+      - GF_Latin_Core
+
+  - file: "guition_ui/assets/fonts/Nunito-SemiBold.ttf"
+    id: nunito_64
+    size: 64
+    bpp: 4
+    glyphsets:
+      - GF_Latin_Core
+
+  - file: "guition_ui/assets/fonts/icons_v2.ttf"
+    id: icons_24
+    size: 24
+    bpp: 4
+    glyphs:
+      - "\U0000e92e" # lock
+      - "\U0000e93b" # air_conditioner
+      - "\U0000e936" # heating
+      - "\U0000e934" # wifi_100
+      - "\U0000e938" # humidity
+
+  - file: "guition_ui/assets/fonts/materialdesignicons-webfont.ttf"
+    id: mdi_icons_24
+    size: 24
+    bpp: 4
+    glyphs:
+      - "\U000F07D0" # home assistant
+      - "\U000F0498" # shield
+
+  - file: "guition_ui/assets/fonts/materialdesignicons-webfont.ttf"
+    id: mdi_icons_28
+    size: 28
+    bpp: 4
+    glyphs:
+      - "\U000F18DD" # ceiling lights
+      - "\U000F056E" # devices
+      - "\U000F0341" # display lock
+      - "\U000F1A4D" # display brightness
+      - "\U000F06A1" # display home
+      - "\U000F18F6" # display weather
+      - "\U000F1C70" # info
+      - "\U000F08BB" # settings
+
+  - file: "assets/fonts/materialdesignicons-webfont.ttf"
+    id: mdi_26
+    size: 26
+    glyphs:
+      - "\U000F05A9" # wifi
+      - "\U000F07D0" # home assistant
+      - "\U000F033E" # lock
+      - "\U000F0425" # power
+      - "\U000F06A1" # home
+      - "\U000F08BB" # settings
+      - "\U000F1C70" # info
+      - "\U000F08DD" # lights
+      - "\U000F056E" # dashboard
+      - "\U000F0498" # shield
+      - "\U000F001B" # air conditioner
+      - "\U000F0438" # radiator
+
+light:
+  - platform: monochromatic
+    output: backlight_output
+    id: display_backlight
+    name: "${room_name} Display Backlight"
+    default_transition_length: 0s
+    restore_mode: ALWAYS_ON
+
+binary_sensor:
+  - platform: status
+    id: api_connected
+    name: "${room_name} API Connected"
+    on_state:
+      - lambda: |-
+          id(api_connected_flag) = id(api_connected).state;
+          if (id(api_connected).state) {
+            id(api_retry_count) = 0;
+          } else if (id(wifi_connected_flag)) {
+            id(api_retry_count) += 1;
+          }
+      - logger.log:
+          format: "[api] State changed: %s"
+          args: ['id(api_connected).state ? "connected" : "disconnected"']
+      - lvgl.label.update:
+          id: api_status_label
+          text: !lambda |-
+            return id(api_connected).state ? std::string("HA: Online") : std::string("HA: Offline");
+      - lvgl.label.update:
+          id: api_status_label
+          text_color: !lambda |-
+            return id(api_connected).state ? lv_color_hex(0x22c55e) : lv_color_hex(0xef4444);
+      - lvgl.label.update:
+          id: ha_icon_shared
+          text_color: !lambda |-
+            return id(api_connected).state ? lv_color_hex(0x22c55e) : lv_color_hex(id(theme_icon_idle_color));
+      - lvgl.label.update:
+          id: ha_status
+          text_color: !lambda |-
+            return id(api_connected).state ? lv_color_hex(0x22c55e) : lv_color_hex(id(theme_icon_idle_color));
+      - lvgl.label.update:
+          id: splash_status_line
+          text: !lambda |-
+            if (id(api_connected).state) return std::string("System online. Loading dashboard...");
+            if (id(wifi_connected_flag)) return std::string("WiFi up, waiting for API...");
+            return std::string("Connecting to WiFi...");
+      - script.execute: update_splash_retry_line
+      - script.execute: maybe_finish_boot
+
+  - platform: homeassistant
+    id: light_1_state
+    entity_id: ${light_1_entity}
+    on_state:
+      - script.execute: refresh_lights
+
+  - platform: homeassistant
+    id: light_2_state
+    entity_id: ${light_2_entity}
+    on_state:
+      - script.execute: refresh_lights
+
+  - platform: homeassistant
+    id: light_3_state
+    entity_id: ${light_3_entity}
+    on_state:
+      - script.execute: refresh_lights
+
+  - platform: homeassistant
+    id: light_4_state
+    entity_id: ${light_4_entity}
+    on_state:
+      - script.execute: refresh_lights
+
+  - platform: homeassistant
+    id: presence_1
+    entity_id: ${presence_1_entity}
+    on_state:
+      - script.execute: refresh_presence
+
+  - platform: homeassistant
+    id: presence_2
+    entity_id: ${presence_2_entity}
+    on_state:
+      - script.execute: refresh_presence
+
+  - platform: homeassistant
+    id: presence_3
+    entity_id: ${presence_3_entity}
+    on_state:
+      - script.execute: refresh_presence
+
+text_sensor:
+  - platform: template
+    id: wifi_ssid_text
+    name: "Wifi SSID"
+    update_interval: never
+  - platform: template
+    id: wifi_ip_text
+    name: "Wifi IP"
+    update_interval: never
+  - platform: homeassistant
+    id: weather_state_text
+    entity_id: ${weather_entity}
+    on_value:
+      - lvgl.label.update:
+          id: home_weather_state_label
+          text: !lambda |-
+            if (id(weather_state_text).state.empty()) return std::string("--");
+            return id(weather_state_text).state;
+      - script.execute: update_home_weather_image
+
+  - platform: homeassistant
+    id: weather_forecast_daily_sensor
+    entity_id: sensor.display_tools_forecasts_daily
+    attribute: forecasts
+    internal: true
+    on_value:
+      then:
+        - script.execute: parse_daily_forecasts
+
+  - platform: homeassistant
+    id: weather_forecast_hourly_sensor
+    entity_id: sensor.display_tools_forecasts_hourly
+    attribute: forecasts
+    internal: true
+    on_value:
+      then:
+        - script.execute: parse_hourly_forecasts
+
+time:
+  - platform: homeassistant
+    id: panel_time
+    timezone: Europe/London
+    on_time:
+      - seconds: /1
+        then:
+          - lvgl.label.update:
+              id: home_time_label
+              text: !lambda |-
+                auto t = id(panel_time).now();
+                if (!t.is_valid()) return std::string("--:--");
+                return t.strftime("%H:%M");
+          - lvgl.label.update:
+              id: home_day_label
+              text: !lambda |-
+                auto t = id(panel_time).now();
+                if (!t.is_valid()) return std::string("--");
+                return t.strftime("%A");
+          - lvgl.label.update:
+              id: home_date_label
+              text: !lambda |-
+                auto t = id(panel_time).now();
+                if (!t.is_valid()) return std::string("--");
+                return t.strftime("%d, %B");
+
+sensor:
+  - platform: homeassistant
+    id: weather_temp_outside
+    entity_id: ${weather_entity}
+    attribute: temperature
+    on_value:
+      - lvgl.label.update:
+          id: home_outside_temp_label
+          text:
+            format: "%.0f°"
+            args: [id(weather_temp_outside).state]
+
+  - platform: homeassistant
+    id: weather_humidity_outside
+    entity_id: ${weather_entity}
+    attribute: humidity
+    on_value:
+      - lvgl.label.update:
+          id: home_humidity_label
+          text:
+            format: "%.0f%%"
+            args: [id(weather_humidity_outside).state]
+      - lvgl.label.update:
+          id: home_center_humidity_label
+          text:
+            format: "%.0f%%"
+            args: [id(weather_humidity_outside).state]
+
+  - platform: homeassistant
+    id: weather_wind_outside
+    entity_id: ${weather_entity}
+    attribute: wind_speed
+    on_value:
+      - lvgl.label.update:
+          id: home_wind_label
+          text:
+            format: "%.0f"
+            args: [id(weather_wind_outside).state]
+      - lvgl.label.update:
+          id: weather_wind_speed_unit
+          text: "m/s"
+
+  - platform: homeassistant
+    id: room_temperature
+    entity_id: ${temp_entity}
+    on_value:
+      - lvgl.label.update:
+          id: temp_value_label
+          text:
+            format: "%.1f C"
+            args: [id(room_temperature).state]
+      - lvgl.label.update:
+          id: home_center_temp_label
+          text:
+            format: "%.1f°"
+            args: [id(room_temperature).state]
+
+  - platform: homeassistant
+    id: room_light_level
+    entity_id: ${light_level_entity}
+    on_value:
+      - lvgl.label.update:
+          id: lux_value_label
+          text:
+            format: "%.0f lx"
+            args: [id(room_light_level).state]
+
+  - platform: homeassistant
+    id: net_download
+    entity_id: ${internet_download_entity}
+    on_value:
+      - lvgl.label.update:
+          id: down_value_label
+          text:
+            format: "DL %.1f Mbps"
+            args: [id(net_download).state]
+
+  - platform: homeassistant
+    id: net_upload
+    entity_id: ${internet_upload_entity}
+    on_value:
+      - lvgl.label.update:
+          id: up_value_label
+          text:
+            format: "UL %.1f Mbps"
+            args: [id(net_upload).state]
+
+  - platform: homeassistant
+    id: cover_left_pos
+    entity_id: ${cover_left_entity}
+    attribute: current_position
+    on_value:
+      - script.execute: refresh_covers
+
+  - platform: homeassistant
+    id: cover_center_pos
+    entity_id: ${cover_center_entity}
+    attribute: current_position
+    on_value:
+      - script.execute: refresh_covers
+
+  - platform: homeassistant
+    id: cover_right_pos
+    entity_id: ${cover_right_entity}
+    attribute: current_position
+    on_value:
+      - script.execute: refresh_covers
+
+  - platform: template
+    id: wifi_signal_db
+    name: "WiFi Signal"
+    update_interval: never
+select:
+  - platform: template
+    id: theme_accent_select
+    name: "${room_name} Theme Accent"
+    optimistic: true
+    restore_value: true
+    initial_option: slate
+    options:
+      - slate
+      - gray
+      - zinc
+      - neutral
+      - stone
+      - red
+      - orange
+      - amber
+      - yellow
+      - lime
+      - green
+      - emerald
+      - teal
+      - cyan
+      - sky
+      - blue
+      - indigo
+      - violet
+      - purple
+      - fuchsia
+      - pink
+      - rose
+    on_value:
+      - lambda: |-
+          id(theme_name) = x;
+          id(inactivity_seconds) = 0;
+      - logger.log:
+          format: "[theme] Requested accent: %s"
+          args: ['x.c_str()']
+      - script.execute: apply_selected_theme
+
+number:
+  - platform: template
+    id: display_timeout_backlight
+    name: "${room_name} Backlight Timeout"
+    optimistic: true
+    unit_of_measurement: "m"
+    initial_value: 10
+    restore_value: true
+    min_value: -1
+    max_value: 720
+    step: 1
+    mode: box
+
+globals:
+  - id: wifi_connected_flag
+    type: bool
+    restore_value: false
+    initial_value: 'false'
+  - id: api_connected_flag
+    type: bool
+    restore_value: false
+    initial_value: 'false'
+  - id: splash_done
+    type: bool
+    restore_value: false
+    initial_value: 'false'
+  - id: wifi_retry_count
+    type: int
+    restore_value: false
+    initial_value: '0'
+  - id: api_retry_count
+    type: int
+    restore_value: false
+    initial_value: '0'
+  - id: boot_elapsed_sec
+    type: int
+    restore_value: false
+    initial_value: '0'
+  - id: inactivity_seconds
+    type: int
+    restore_value: false
+    initial_value: '0'
+  - id: active_page_id
+    type: int
+    restore_value: false
+    initial_value: '0'
+  - id: theme_name
+    type: std::string
+    restore_value: true
+    initial_value: '"slate"'
+  - id: theme_accent_color
+    type: uint32_t
+    restore_value: true
+    initial_value: 0x${tw_slate_500}
+  - id: theme_background_color
+    type: uint32_t
+    restore_value: true
+    initial_value: 0x${tw_slate_950}
+  - id: theme_panel_color
+    type: uint32_t
+    restore_value: true
+    initial_value: 0x${tw_slate_900}
+  - id: theme_border_color
+    type: uint32_t
+    restore_value: true
+    initial_value: 0x${tw_slate_700}
+  - id: theme_button_color
+    type: uint32_t
+    restore_value: true
+    initial_value: 0x${tw_slate_700}
+  - id: theme_text_color
+    type: uint32_t
+    restore_value: true
+    initial_value: 0x${tw_slate_200}
+  - id: theme_muted_color
+    type: uint32_t
+    restore_value: true
+    initial_value: 0x${tw_slate_400}
+  - id: theme_icon_idle_color
+    type: uint32_t
+    restore_value: true
+    initial_value: 0x${tw_slate_500}
+  - id: display_timeout
+    type: int
+    restore_value: true
+    initial_value: '2'
+  - id: backlight_dimmed
+    type: bool
+    restore_value: false
+    initial_value: 'false'
+  - id: backlight_restore_brightness
+    type: float
+    restore_value: false
+    initial_value: '1.0'
+
+  # Forecast daily data
+  - id: forecast_daily_count
+    type: int
+    initial_value: '0'
+  - id: forecast_daily_timestamps
+    type: time_t[10]
+  - id: forecast_daily_temps
+    type: float[10]
+  - id: forecast_daily_conditions
+    type: std::string[10]
+
+  # Forecast hourly data
+  - id: forecast_hourly_count
+    type: int
+    initial_value: '0'
+  - id: forecast_hourly_timestamps
+    type: time_t[15]
+  - id: forecast_hourly_temps
+    type: float[15]
+  - id: forecast_hourly_conditions
+    type: std::string[15]
+
+script:
+  - id: go_home_page
+    then:
+      - lambda: |-
+          id(active_page_id) = 0;
+          id(inactivity_seconds) = 0;
+      - lvgl.widget.hide: shared_top_bar
+      - lvgl.widget.hide: shared_bottom_bar
+      - lvgl.page.show: home_page
+      - script.execute: update_home_weather_image
+
+  - id: go_dashboard_page
+    then:
+      - lambda: |-
+          id(active_page_id) = 2;
+          id(inactivity_seconds) = 0;
+      - lvgl.widget.show: shared_top_bar
+      - lvgl.widget.show: shared_bottom_bar
+      - lvgl.page.show: dashboard_page
+
+  - id: go_lights_page
+    then:
+      - lambda: |-
+          id(active_page_id) = 1;
+          id(inactivity_seconds) = 0;
+      - lvgl.widget.show: shared_top_bar
+      - lvgl.widget.show: shared_bottom_bar
+      - lvgl.page.show: lights_page
+
+  - id: go_settings_page
+    then:
+      - lambda: |-
+          id(inactivity_seconds) = 0;
+      - lvgl.widget.show: shared_top_bar
+      - lvgl.widget.show: shared_bottom_bar
+      - if:
+          condition:
+            lambda: 'return id(active_page_id) == 0;'
+          then:
+            - lvgl.page.show:
+                id: settings_page
+                animation: MOVE_LEFT
+                time: 320ms
+          else:
+            - lvgl.page.show: settings_page
+      - lambda: |-
+          id(active_page_id) = 3;
+
+  - id: go_weather_page
+    then:
+      - lambda: |-
+          id(inactivity_seconds) = 0;
+      - lvgl.widget.hide: shared_top_bar
+      - lvgl.widget.hide: shared_bottom_bar
+      - lvgl.page.show: weather_page
+      - lambda: |-
+          id(active_page_id) = 4;
+
+  - id: restore_backlight_on_activity
+    then:
+      - if:
+          condition:
+            lambda: 'return id(backlight_dimmed);'
+          then:
+            - logger.log:
+                format: "[ui] Restoring backlight after inactivity (%.2f)"
+                args: ['id(backlight_restore_brightness)']
+            - light.turn_on:
+                id: display_backlight
+                transition_length: 0s
+                brightness: !lambda |-
+                  return id(backlight_restore_brightness);
+            - lambda: |-
+                id(backlight_dimmed) = false;
+
+  - id: dim_backlight_for_inactivity
+    then:
+      - if:
+          condition:
+            lambda: 'return !id(backlight_dimmed) && id(inactivity_seconds) >= 300 && id(display_backlight).current_values.is_on();'
+          then:
+            - lambda: |-
+                float current = id(display_backlight).current_values.get_brightness();
+                if (current > 0.01f) {
+                  id(backlight_restore_brightness) = current;
+                }
+                id(backlight_dimmed) = true;
+            - logger.log:
+                format: "[ui] Inactivity dim after %ds -> %.2f"
+                args: ['id(inactivity_seconds)', 'id(backlight_restore_brightness)']
+            - light.turn_on:
+                id: display_backlight
+                transition_length: 0s
+                brightness: 15%
+
+  - id: update_home_weather_image
+    then:
+      - lambda: |-
+          auto hide_all = []() {
+            lv_obj_add_flag(id(weather_sunny_image), LV_OBJ_FLAG_HIDDEN);
+            lv_obj_add_flag(id(weather_clear_night_image), LV_OBJ_FLAG_HIDDEN);
+            lv_obj_add_flag(id(weather_cloudy_image), LV_OBJ_FLAG_HIDDEN);
+            lv_obj_add_flag(id(weather_cloudy_night_image), LV_OBJ_FLAG_HIDDEN);
+            lv_obj_add_flag(id(weather_partlycloudy_sun_image), LV_OBJ_FLAG_HIDDEN);
+            lv_obj_add_flag(id(weather_partlycloudy_moon_image), LV_OBJ_FLAG_HIDDEN);
+            lv_obj_add_flag(id(weather_rainy_image), LV_OBJ_FLAG_HIDDEN);
+            lv_obj_add_flag(id(weather_rainy_night_image), LV_OBJ_FLAG_HIDDEN);
+            lv_obj_add_flag(id(weather_pouring_image), LV_OBJ_FLAG_HIDDEN);
+            lv_obj_add_flag(id(weather_pouring_night_image), LV_OBJ_FLAG_HIDDEN);
+            lv_obj_add_flag(id(weather_snowy_image), LV_OBJ_FLAG_HIDDEN);
+            lv_obj_add_flag(id(weather_snowy_night_image), LV_OBJ_FLAG_HIDDEN);
+            lv_obj_add_flag(id(weather_snowy_rainy_image), LV_OBJ_FLAG_HIDDEN);
+            lv_obj_add_flag(id(weather_fog_image), LV_OBJ_FLAG_HIDDEN);
+            lv_obj_add_flag(id(weather_fog_night_image), LV_OBJ_FLAG_HIDDEN);
+            lv_obj_add_flag(id(weather_hail_image), LV_OBJ_FLAG_HIDDEN);
+            lv_obj_add_flag(id(weather_lightning_image), LV_OBJ_FLAG_HIDDEN);
+            lv_obj_add_flag(id(weather_lightning_night_image), LV_OBJ_FLAG_HIDDEN);
+            lv_obj_add_flag(id(weather_lightning_rainy_image), LV_OBJ_FLAG_HIDDEN);
+            lv_obj_add_flag(id(weather_lightning_rainy_night_image), LV_OBJ_FLAG_HIDDEN);
+            lv_obj_add_flag(id(weather_windy_image), LV_OBJ_FLAG_HIDDEN);
+            lv_obj_add_flag(id(weather_windy_variant_image), LV_OBJ_FLAG_HIDDEN);
+          };
+
+          hide_all();
+          std::string weather = id(weather_state_text).state;
+          auto show = [](lv_obj_t *obj) { lv_obj_clear_flag(obj, LV_OBJ_FLAG_HIDDEN); };
+
+          auto now = id(panel_time).now();
+          bool is_night = now.is_valid() && (now.hour < 6 || now.hour >= 20);
+
+          if (weather == "sunny" || weather == "clear" || weather == "clear-day") show(is_night ? id(weather_clear_night_image) : id(weather_sunny_image));
+          else if (weather == "clear-night") show(id(weather_clear_night_image));
+          else if (weather == "cloudy") show(is_night ? id(weather_cloudy_night_image) : id(weather_cloudy_image));
+          else if (weather == "partlycloudy") show(is_night ? id(weather_partlycloudy_moon_image) : id(weather_partlycloudy_sun_image));
+          else if (weather == "partly-cloudy") show(is_night ? id(weather_partlycloudy_moon_image) : id(weather_partlycloudy_sun_image));
+          else if (weather == "rainy") show(is_night ? id(weather_rainy_night_image) : id(weather_rainy_image));
+          else if (weather == "pouring") show(is_night ? id(weather_pouring_night_image) : id(weather_pouring_image));
+          else if (weather == "snowy") show(is_night ? id(weather_snowy_night_image) : id(weather_snowy_image));
+          else if (weather == "snowy-rainy" || weather == "sleet") show(id(weather_snowy_rainy_image));
+          else if (weather == "fog" || weather == "haze") show(is_night ? id(weather_fog_night_image) : id(weather_fog_image));
+          else if (weather == "hail") show(id(weather_hail_image));
+          else if (weather == "lightning") show(is_night ? id(weather_lightning_night_image) : id(weather_lightning_image));
+          else if (weather == "lightning-rainy") show(is_night ? id(weather_lightning_rainy_night_image) : id(weather_lightning_rainy_image));
+          else if (weather == "thunderstorm") show(is_night ? id(weather_lightning_night_image) : id(weather_lightning_image));
+          else if (weather == "thunderstorm-rainy") show(is_night ? id(weather_lightning_rainy_night_image) : id(weather_lightning_rainy_image));
+          else if (weather == "windy") show(id(weather_windy_image));
+          else if (weather == "windy-variant") show(id(weather_windy_variant_image));
+          else if (weather == "exceptional") show(is_night ? id(weather_lightning_rainy_night_image) : id(weather_lightning_rainy_image));
+          else show(is_night ? id(weather_clear_night_image) : id(weather_sunny_image));
+
+  - id: update_settings_theme_label
+    then:
+      - lvgl.label.update:
+          id: settings_theme_value_label
+          text: !lambda |-
+            return id(theme_name);
+      - lvgl.obj.update:
+          id: settings_chip_slate
+          border_width: !lambda |-
+            return id(theme_name) == "slate" ? 3 : 1;
+          border_color: !lambda |-
+            return id(theme_name) == "slate" ? lv_color_hex(id(theme_text_color)) : lv_color_hex(id(theme_border_color));
+      - lvgl.obj.update:
+          id: settings_chip_gray
+          border_width: !lambda |-
+            return id(theme_name) == "gray" ? 3 : 1;
+          border_color: !lambda |-
+            return id(theme_name) == "gray" ? lv_color_hex(id(theme_text_color)) : lv_color_hex(id(theme_border_color));
+      - lvgl.obj.update:
+          id: settings_chip_zinc
+          border_width: !lambda |-
+            return id(theme_name) == "zinc" ? 3 : 1;
+          border_color: !lambda |-
+            return id(theme_name) == "zinc" ? lv_color_hex(id(theme_text_color)) : lv_color_hex(id(theme_border_color));
+      - lvgl.obj.update:
+          id: settings_chip_neutral
+          border_width: !lambda |-
+            return id(theme_name) == "neutral" ? 3 : 1;
+          border_color: !lambda |-
+            return id(theme_name) == "neutral" ? lv_color_hex(id(theme_text_color)) : lv_color_hex(id(theme_border_color));
+      - lvgl.obj.update:
+          id: settings_chip_stone
+          border_width: !lambda |-
+            return id(theme_name) == "stone" ? 3 : 1;
+          border_color: !lambda |-
+            return id(theme_name) == "stone" ? lv_color_hex(id(theme_text_color)) : lv_color_hex(id(theme_border_color));
+      - lvgl.obj.update:
+          id: settings_chip_red
+          border_width: !lambda |-
+            return id(theme_name) == "red" ? 3 : 1;
+          border_color: !lambda |-
+            return id(theme_name) == "red" ? lv_color_hex(id(theme_text_color)) : lv_color_hex(id(theme_border_color));
+      - lvgl.obj.update:
+          id: settings_chip_orange
+          border_width: !lambda |-
+            return id(theme_name) == "orange" ? 3 : 1;
+          border_color: !lambda |-
+            return id(theme_name) == "orange" ? lv_color_hex(id(theme_text_color)) : lv_color_hex(id(theme_border_color));
+      - lvgl.obj.update:
+          id: settings_chip_amber
+          border_width: !lambda |-
+            return id(theme_name) == "amber" ? 3 : 1;
+          border_color: !lambda |-
+            return id(theme_name) == "amber" ? lv_color_hex(id(theme_text_color)) : lv_color_hex(id(theme_border_color));
+      - lvgl.obj.update:
+          id: settings_chip_yellow
+          border_width: !lambda |-
+            return id(theme_name) == "yellow" ? 3 : 1;
+          border_color: !lambda |-
+            return id(theme_name) == "yellow" ? lv_color_hex(id(theme_text_color)) : lv_color_hex(id(theme_border_color));
+      - lvgl.obj.update:
+          id: settings_chip_lime
+          border_width: !lambda |-
+            return id(theme_name) == "lime" ? 3 : 1;
+          border_color: !lambda |-
+            return id(theme_name) == "lime" ? lv_color_hex(id(theme_text_color)) : lv_color_hex(id(theme_border_color));
+      - lvgl.obj.update:
+          id: settings_chip_green
+          border_width: !lambda |-
+            return id(theme_name) == "green" ? 3 : 1;
+          border_color: !lambda |-
+            return id(theme_name) == "green" ? lv_color_hex(id(theme_text_color)) : lv_color_hex(id(theme_border_color));
+      - lvgl.obj.update:
+          id: settings_chip_emerald
+          border_width: !lambda |-
+            return id(theme_name) == "emerald" ? 3 : 1;
+          border_color: !lambda |-
+            return id(theme_name) == "emerald" ? lv_color_hex(id(theme_text_color)) : lv_color_hex(id(theme_border_color));
+      - lvgl.obj.update:
+          id: settings_chip_teal
+          border_width: !lambda |-
+            return id(theme_name) == "teal" ? 3 : 1;
+          border_color: !lambda |-
+            return id(theme_name) == "teal" ? lv_color_hex(id(theme_text_color)) : lv_color_hex(id(theme_border_color));
+      - lvgl.obj.update:
+          id: settings_chip_cyan
+          border_width: !lambda |-
+            return id(theme_name) == "cyan" ? 3 : 1;
+          border_color: !lambda |-
+            return id(theme_name) == "cyan" ? lv_color_hex(id(theme_text_color)) : lv_color_hex(id(theme_border_color));
+      - lvgl.obj.update:
+          id: settings_chip_sky
+          border_width: !lambda |-
+            return id(theme_name) == "sky" ? 3 : 1;
+          border_color: !lambda |-
+            return id(theme_name) == "sky" ? lv_color_hex(id(theme_text_color)) : lv_color_hex(id(theme_border_color));
+      - lvgl.obj.update:
+          id: settings_chip_blue
+          border_width: !lambda |-
+            return id(theme_name) == "blue" ? 3 : 1;
+          border_color: !lambda |-
+            return id(theme_name) == "blue" ? lv_color_hex(id(theme_text_color)) : lv_color_hex(id(theme_border_color));
+      - lvgl.obj.update:
+          id: settings_chip_indigo
+          border_width: !lambda |-
+            return id(theme_name) == "indigo" ? 3 : 1;
+          border_color: !lambda |-
+            return id(theme_name) == "indigo" ? lv_color_hex(id(theme_text_color)) : lv_color_hex(id(theme_border_color));
+      - lvgl.obj.update:
+          id: settings_chip_violet
+          border_width: !lambda |-
+            return id(theme_name) == "violet" ? 3 : 1;
+          border_color: !lambda |-
+            return id(theme_name) == "violet" ? lv_color_hex(id(theme_text_color)) : lv_color_hex(id(theme_border_color));
+      - lvgl.obj.update:
+          id: settings_chip_purple
+          border_width: !lambda |-
+            return id(theme_name) == "purple" ? 3 : 1;
+          border_color: !lambda |-
+            return id(theme_name) == "purple" ? lv_color_hex(id(theme_text_color)) : lv_color_hex(id(theme_border_color));
+      - lvgl.obj.update:
+          id: settings_chip_fuchsia
+          border_width: !lambda |-
+            return id(theme_name) == "fuchsia" ? 3 : 1;
+          border_color: !lambda |-
+            return id(theme_name) == "fuchsia" ? lv_color_hex(id(theme_text_color)) : lv_color_hex(id(theme_border_color));
+      - lvgl.obj.update:
+          id: settings_chip_pink
+          border_width: !lambda |-
+            return id(theme_name) == "pink" ? 3 : 1;
+          border_color: !lambda |-
+            return id(theme_name) == "pink" ? lv_color_hex(id(theme_text_color)) : lv_color_hex(id(theme_border_color));
+      - lvgl.obj.update:
+          id: settings_chip_rose
+          border_width: !lambda |-
+            return id(theme_name) == "rose" ? 3 : 1;
+          border_color: !lambda |-
+            return id(theme_name) == "rose" ? lv_color_hex(id(theme_text_color)) : lv_color_hex(id(theme_border_color));
+
+  - id: apply_selected_theme
+    then:
+      - lambda: |-
+          auto theme = id(theme_accent_select).state;
+          if (theme.empty()) {
+            theme = id(theme_name);
+          }
+          id(theme_name) = theme;
+          uint32_t accent = 0x${tw_slate_500};
+          if (theme == "gray") accent = 0x${tw_gray_500};
+          else if (theme == "zinc") accent = 0x${tw_zinc_500};
+          else if (theme == "neutral") accent = 0x${tw_neutral_500};
+          else if (theme == "stone") accent = 0x${tw_stone_500};
+          else if (theme == "red") accent = 0x${tw_red_500};
+          else if (theme == "orange") accent = 0x${tw_orange_500};
+          else if (theme == "amber") accent = 0x${tw_amber_500};
+          else if (theme == "yellow") accent = 0x${tw_yellow_500};
+          else if (theme == "lime") accent = 0x${tw_lime_500};
+          else if (theme == "green") accent = 0x${tw_green_500};
+          else if (theme == "emerald") accent = 0x${tw_emerald_500};
+          else if (theme == "teal") accent = 0x${tw_teal_500};
+          else if (theme == "cyan") accent = 0x${tw_cyan_500};
+          else if (theme == "sky") accent = 0x${tw_sky_500};
+          else if (theme == "blue") accent = 0x${tw_blue_500};
+          else if (theme == "indigo") accent = 0x${tw_indigo_500};
+          else if (theme == "violet") accent = 0x${tw_violet_500};
+          else if (theme == "purple") accent = 0x${tw_purple_500};
+          else if (theme == "fuchsia") accent = 0x${tw_fuchsia_500};
+          else if (theme == "pink") accent = 0x${tw_pink_500};
+          else if (theme == "rose") accent = 0x${tw_rose_500};
+
+          auto mix = [](uint32_t base, uint32_t tint, float ratio) -> uint32_t {
+            uint8_t br = (base >> 16) & 0xFF;
+            uint8_t bg = (base >> 8) & 0xFF;
+            uint8_t bb = base & 0xFF;
+            uint8_t tr = (tint >> 16) & 0xFF;
+            uint8_t tg = (tint >> 8) & 0xFF;
+            uint8_t tb = tint & 0xFF;
+            uint8_t rr = static_cast<uint8_t>(br + (tr - br) * ratio);
+            uint8_t rg = static_cast<uint8_t>(bg + (tg - bg) * ratio);
+            uint8_t rb = static_cast<uint8_t>(bb + (tb - bb) * ratio);
+            return (static_cast<uint32_t>(rr) << 16) | (static_cast<uint32_t>(rg) << 8) | rb;
+          };
+
+          id(theme_accent_color) = accent;
+          id(theme_background_color) = mix(0x${tw_slate_950}, accent, 0.16f);
+          id(theme_panel_color) = mix(0x${tw_slate_900}, accent, 0.28f);
+          id(theme_border_color) = mix(0x${tw_slate_700}, accent, 0.40f);
+          id(theme_button_color) = mix(0x${tw_slate_700}, accent, 0.48f);
+          id(theme_text_color) = 0x${tw_slate_200};
+          id(theme_muted_color) = mix(0x${tw_slate_400}, accent, 0.20f);
+          id(theme_icon_idle_color) = mix(0x${tw_slate_500}, accent, 0.24f);
+      - logger.log:
+          format: "[theme] Applied %s accent=%06X bg=%06X panel=%06X border=%06X"
+          args:
+            - 'id(theme_name).c_str()'
+            - '(int) id(theme_accent_color)'
+            - '(int) id(theme_background_color)'
+            - '(int) id(theme_panel_color)'
+            - '(int) id(theme_border_color)'
+      - script.execute: refresh_theme
+      - script.execute: refresh_lights
+      - script.execute: update_settings_theme_label
+
+  - id: update_splash_retry_line
+    then:
+      - if:
+          condition:
+            lambda: 'return (id(wifi_retry_count) + id(api_retry_count)) > 1;'
+          then:
+            - lvgl.widget.show: splash_retry_line
+            - lvgl.label.update:
+                id: splash_retry_line
+                text: !lambda |-
+                  static char buf[48];
+                  snprintf(buf, sizeof(buf), "Retries WiFi %d | API %d", id(wifi_retry_count), id(api_retry_count));
+                  return std::string(buf);
+          else:
+            - lvgl.widget.hide: splash_retry_line
+
+  - id: maybe_finish_boot
+    then:
+      - if:
+          condition:
+            lambda: 'return !id(splash_done) && id(wifi_connected_flag) && id(api_connected_flag);'
+          then:
+            - logger.log: "[boot] WiFi + API connected, leaving splash"
+            - lvgl.label.update:
+                id: splash_status_line
+                text: "Connected. Opening dashboard..."
+            - delay: 600ms
+            - lambda: 'id(splash_done) = true;'
+            - lvgl.widget.hide: splash_layer
+
+  - id: boot_monitor_tick
+    then:
+      - if:
+          condition:
+            lambda: 'return !id(splash_done);'
+          then:
+            - lambda: 'id(boot_elapsed_sec) += 2;'
+            - lvgl.label.update:
+                id: splash_status_line
+                text: !lambda |-
+                  if (!id(wifi_connected_flag)) return std::string("Connecting to WiFi...");
+                  if (!id(api_connected_flag)) return std::string("WiFi connected. Waiting for API...");
+                  return std::string("Connected. Loading dashboard...");
+            - logger.log:
+                format: "[boot] t=%ds wifi=%d api=%d retries(wifi=%d api=%d)"
+                args: [ 'id(boot_elapsed_sec)', 'id(wifi_connected_flag)', 'id(api_connected_flag)', 'id(wifi_retry_count)', 'id(api_retry_count)' ]
+            - if:
+                condition:
+                  lambda: 'return !id(wifi_connected_flag) && (id(boot_elapsed_sec) % 8 == 0);'
+                then:
+                  - lambda: 'id(wifi_retry_count) += 1;'
+                  - logger.log:
+                      format: "[wifi] Active retry #%d"
+                      args: [ 'id(wifi_retry_count)' ]
+                  - lvgl.label.update:
+                      id: splash_status_line
+                      text: "Connecting to WiFi..."
+                  - script.execute: update_splash_retry_line
+                  - delay: 600ms
+            - if:
+                condition:
+                  lambda: 'return id(wifi_connected_flag) && !id(api_connected_flag) && (id(boot_elapsed_sec) % 10 == 0);'
+                then:
+                  - lambda: 'id(api_retry_count) += 1;'
+                  - logger.log:
+                      format: "[api] Waiting for API, retry marker #%d"
+                      args: [ 'id(api_retry_count)' ]
+                  - lvgl.label.update:
+                      id: splash_status_line
+                      text: "WiFi connected. Waiting for API..."
+                  - script.execute: update_splash_retry_line
+            - if:
+                condition:
+                  lambda: 'return id(boot_elapsed_sec) > 120 && !id(api_connected_flag);'
+                then:
+                  - logger.log: "[boot] API still unavailable after timeout"
+                  - lvgl.label.update:
+                      id: splash_status_line
+                      text: "API timeout. Continuing in local mode."
+                  - delay: 1200ms
+                  - lambda: 'id(splash_done) = true;'
+                  - lvgl.widget.hide: splash_layer
+
+  - id: parse_daily_forecasts
+    then:
+      - lambda: |-
+          std::string json_str = id(weather_forecast_daily_sensor).state;
+          if (json_str.empty() || json_str == "unknown") {
+            id(forecast_daily_count) = 0;
+            return;
+          }
+          JsonDocument doc;
+          DeserializationError error = deserializeJson(doc, json_str);
+          if (error) {
+            id(forecast_daily_count) = 0;
+            return;
+          }
+          JsonArray forecasts = doc.as<JsonArray>();
+          if (forecasts.isNull()) {
+            id(forecast_daily_count) = 0;
+            return;
+          }
+          int count = std::min((int)forecasts.size(), 6);
+          id(forecast_daily_count) = count;
+
+          auto local_now = id(panel_time).now();
+          auto utc_now = id(panel_time).utcnow();
+          int32_t offset_hours = local_now.hour - utc_now.hour;
+          if (offset_hours > 12) offset_hours -= 24;
+          if (offset_hours < -12) offset_hours += 24;
+          int32_t tz_offset = offset_hours * 3600 +
+                            (local_now.minute - utc_now.minute) * 60 +
+                            (local_now.second - utc_now.second);
+
+          for (int i = 0; i < count; i++) {
+            JsonObject forecast = forecasts[i];
+            const char* dt_str = forecast["datetime"];
+            if (dt_str) {
+              struct tm tm = {};
+              if (strptime(dt_str, "%Y-%m-%dT%H:%M:%S", &tm)) {
+                time_t local_ts = mktime(&tm);
+                time_t utc_timestamp = local_ts + tz_offset;
+                id(forecast_daily_timestamps)[i] = utc_timestamp;
+              } else {
+                id(forecast_daily_timestamps)[i] = 0;
+              }
+            } else {
+              id(forecast_daily_timestamps)[i] = 0;
+            }
+            id(forecast_daily_temps)[i] = forecast["temperature"] | 0.0f;
+            id(forecast_daily_conditions)[i] = forecast["condition"] | "sunny";
+          }
+      - script.execute: update_daily_display
+
+  - id: parse_hourly_forecasts
+    then:
+      - lambda: |-
+          std::string json_str = id(weather_forecast_hourly_sensor).state;
+          if (json_str.empty() || json_str == "unknown") {
+            id(forecast_hourly_count) = 0;
+            return;
+          }
+          JsonDocument doc;
+          DeserializationError error = deserializeJson(doc, json_str);
+          if (error) {
+            id(forecast_hourly_count) = 0;
+            return;
+          }
+          JsonArray forecasts = doc.as<JsonArray>();
+          if (forecasts.isNull()) {
+            id(forecast_hourly_count) = 0;
+            return;
+          }
+          int count = forecasts.size();
+          id(forecast_hourly_count) = count;
+
+          auto local_now = id(panel_time).now();
+          auto utc_now = id(panel_time).utcnow();
+          int32_t offset_hours = local_now.hour - utc_now.hour;
+          if (offset_hours > 12) offset_hours -= 24;
+          if (offset_hours < -12) offset_hours += 24;
+          int32_t tz_offset = offset_hours * 3600 +
+                            (local_now.minute - utc_now.minute) * 60 +
+                            (local_now.second - utc_now.second);
+
+          for (int i = 0; i < count; i++) {
+            JsonObject forecast = forecasts[i];
+            const char* dt_str = forecast["datetime"];
+            if (dt_str) {
+              struct tm tm = {};
+              if (strptime(dt_str, "%Y-%m-%dT%H:%M:%S", &tm)) {
+                time_t local_ts = mktime(&tm);
+                time_t utc_timestamp = local_ts + tz_offset;
+                id(forecast_hourly_timestamps)[i] = utc_timestamp;
+              } else {
+                id(forecast_hourly_timestamps)[i] = 0;
+              }
+            } else {
+              id(forecast_hourly_timestamps)[i] = 0;
+            }
+            id(forecast_hourly_temps)[i] = forecast["temperature"] | 0.0f;
+            id(forecast_hourly_conditions)[i] = forecast["condition"] | "sunny";
+          }
+      - script.execute: update_hourly_display
+
+  - id: update_daily_display
+    then:
+      - lambda: |-
+          if (id(forecast_daily_count) == 0) return;
+          if (!id(weather_page_forecast_daily)) return;
+          
+          lv_obj_clean(id(weather_page_forecast_daily));
+          
+          auto get_icon = [](const std::string& c) -> esphome::image::Image* {
+            // Re-using the same icons mapped in your home dashboard
+            if (c == "clear-night") return id(home_weather_clear_night_img);
+            if (c == "cloudy") return id(home_weather_cloudy_img);
+            if (c == "fog") return id(home_weather_fog_img);
+            if (c == "hail") return id(home_weather_hail_img);
+            if (c == "lightning") return id(home_weather_lightning_img);
+            if (c == "lightning-rainy") return id(home_weather_lightning_rainy_img);
+            if (c == "partlycloudy") return id(home_weather_partlycloudy_sun_img);
+            if (c == "pouring") return id(home_weather_pouring_img);
+            if (c == "rainy") return id(home_weather_rainy_img);
+            if (c == "snowy") return id(home_weather_snowy_img);
+            if (c == "snowy-rainy") return id(home_weather_snowy_rainy_img);
+            if (c == "sunny") return id(home_weather_sunny_img);
+            if (c == "windy") return id(home_weather_windy_img);
+            if (c == "windy-variant") return id(home_weather_windy_variant_img);
+            return id(home_weather_sunny_img);
+          };
+          
+          auto get_day_name = [](int index) -> const char* {
+            auto time_now = id(panel_time).now();
+            int today_wday = time_now.day_of_week;
+            int forecast_wday = (today_wday + index - 1) % 7 + 1;
+            
+            const char* day_keys[] = {
+              "", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"
+            };
+            
+            if (forecast_wday < 1 || forecast_wday > 7) return "???";
+            return day_keys[forecast_wday];
+          };
+          
+          lv_obj_t* cont = lv_obj_create(id(weather_page_forecast_daily));
+          if (!cont) return;
+          
+          lv_obj_set_size(cont, 408, 250); // Increased for larger icons
+          lv_obj_align(cont, LV_ALIGN_CENTER, 0, 5);
+          lv_obj_set_style_bg_opa(cont, LV_OPA_TRANSP, 0);
+          lv_obj_set_style_border_width(cont, 0, 0);
+          lv_obj_set_style_pad_all(cont, 0, 0);
+          lv_obj_set_style_pad_column(cont, 0, 0);
+          lv_obj_set_flex_flow(cont, LV_FLEX_FLOW_ROW);
+          
+          for (int i = 0; i < id(forecast_daily_count); i++) {
+            lv_obj_t* item = lv_obj_create(cont);
+            if (!item) continue;
+            
+            lv_obj_set_size(item, 68, 240);
+            lv_obj_set_style_bg_opa(item, LV_OPA_TRANSP, 0);
+            lv_obj_set_style_border_width(item, 0, 0);
+            lv_obj_set_style_pad_all(item, 0, 0);
+            
+            // Day Label
+            lv_obj_t* day_label = lv_label_create(item);
+            if (day_label) {
+              lv_label_set_text(day_label, get_day_name(i));
+              lv_obj_align(day_label, LV_ALIGN_TOP_MID, 0, 10);
+              lv_obj_set_style_text_font(day_label, nunito_20_engine->get_lv_font(), 0);
+              lv_obj_set_style_text_color(day_label, lv_color_hex((id(color_steel_blue).r << 16) | (id(color_steel_blue).g << 8) | id(color_steel_blue).b), 0);
+            }
+            
+            // Icon
+            lv_obj_t* icon = lv_img_create(item);
+            if (icon) {
+              lv_img_set_src(icon, get_icon(id(forecast_daily_conditions)[i]));
+              // The home weather icons are 128x128, so we'll scale them down to roughly half size
+              lv_img_set_zoom(icon, 128); // 128 = 50%
+              lv_obj_align(icon, LV_ALIGN_CENTER, 0, 0);
+            }
+            
+            // Temp
+            lv_obj_t* temp_label = lv_label_create(item);
+            if (temp_label) {
+              char temp_str[10];
+              snprintf(temp_str, sizeof(temp_str), "%.0f°", id(forecast_daily_temps)[i]);
+              lv_label_set_text(temp_label, temp_str);
+              lv_obj_align(temp_label, LV_ALIGN_BOTTOM_MID, 0, -10);
+              lv_obj_set_style_text_font(temp_label, nunito_20_engine->get_lv_font(), 0);
+              lv_obj_set_style_text_color(temp_label, lv_color_hex((id(color_misty_blue).r << 16) | (id(color_misty_blue).g << 8) | id(color_misty_blue).b), 0);
+            }
+          }
+
+  - id: update_hourly_display
+    then:
+      - lambda: |-
+          if (id(forecast_hourly_count) == 0) return;
+          if (!id(weather_page_forecast_hourly)) return;
+          
+          lv_obj_clean(id(weather_page_forecast_hourly));
+          
+          auto get_icon = [](const std::string& c) -> esphome::image::Image* {
+            if (c == "clear-night") return id(home_weather_clear_night_img);
+            if (c == "cloudy") return id(home_weather_cloudy_img);
+            if (c == "fog") return id(home_weather_fog_img);
+            if (c == "hail") return id(home_weather_hail_img);
+            if (c == "lightning") return id(home_weather_lightning_img);
+            if (c == "lightning-rainy") return id(home_weather_lightning_rainy_img);
+            if (c == "partlycloudy") return id(home_weather_partlycloudy_sun_img);
+            if (c == "pouring") return id(home_weather_pouring_img);
+            if (c == "rainy") return id(home_weather_rainy_img);
+            if (c == "snowy") return id(home_weather_snowy_img);
+            if (c == "snowy-rainy") return id(home_weather_snowy_rainy_img);
+            if (c == "sunny") return id(home_weather_sunny_img);
+            if (c == "windy") return id(home_weather_windy_img);
+            if (c == "windy-variant") return id(home_weather_windy_variant_img);
+            return id(home_weather_sunny_img);
+          };
+          
+          auto get_time_str = [](time_t utc_timestamp) -> std::string {
+            if (utc_timestamp == 0) return "--:--";
+            
+            auto local_now = id(panel_time).now();
+            auto utc_now = id(panel_time).utcnow();
+            
+            int32_t offset_hours = local_now.hour - utc_now.hour;
+            if (offset_hours > 12) offset_hours -= 24;
+            if (offset_hours < -12) offset_hours += 24;
+            
+            int32_t tz_offset = offset_hours * 3600 + 
+                              (local_now.minute - utc_now.minute) * 60 + 
+                              (local_now.second - utc_now.second);
+            
+            time_t local_timestamp = utc_timestamp + tz_offset;
+            struct tm local_tm;
+            gmtime_r(&local_timestamp, &local_tm);
+            
+            char buf[10];
+            snprintf(buf, sizeof(buf), "%02d:%02d", local_tm.tm_hour, local_tm.tm_min);
+            return std::string(buf);
+          };
+
+          lv_obj_t* cont = lv_obj_create(id(weather_page_forecast_hourly));
+          if (!cont) return;
+          
+          lv_obj_set_size(cont, LV_SIZE_CONTENT, 250);
+          lv_obj_set_style_bg_opa(cont, LV_OPA_TRANSP, 0);
+          lv_obj_set_style_border_width(cont, 0, 0);
+          lv_obj_set_style_pad_all(cont, 0, 0);
+          lv_obj_set_style_pad_column(cont, 0, 0);
+          lv_obj_set_flex_flow(cont, LV_FLEX_FLOW_ROW);
+          lv_obj_set_scrollbar_mode(cont, LV_SCROLLBAR_MODE_AUTO);
+          lv_obj_set_scroll_dir(cont, LV_DIR_HOR);
+          
+          for (int i = 0; i < id(forecast_hourly_count); i++) {
+            lv_obj_t* item = lv_obj_create(cont);
+            if (!item) continue;
+            
+            lv_obj_set_size(item, 68, 240);
+            lv_obj_set_style_bg_opa(item, LV_OPA_TRANSP, 0);
+            lv_obj_set_style_border_width(item, 0, 0);
+            lv_obj_set_style_pad_all(item, 2, 0);
+            lv_obj_clear_flag(item, LV_OBJ_FLAG_SCROLLABLE);
+            
+            lv_obj_t* time_label = lv_label_create(item);
+            if (time_label) {
+              std::string time_str = get_time_str(id(forecast_hourly_timestamps)[i]);
+              lv_label_set_text(time_label, time_str.c_str());
+              lv_obj_align(time_label, LV_ALIGN_TOP_MID, 0, 10);
+              lv_obj_set_style_text_font(time_label, nunito_16_engine->get_lv_font(), 0);
+              lv_obj_set_style_text_color(time_label, lv_color_hex((id(color_steel_blue).r << 16) | (id(color_steel_blue).g << 8) | id(color_steel_blue).b), 0);
+            }
+            
+            lv_obj_t* icon = lv_img_create(item);
+            if (icon) {
+              lv_img_set_src(icon, get_icon(id(forecast_hourly_conditions)[i]));
+              lv_img_set_zoom(icon, 128);
+              lv_obj_align(icon, LV_ALIGN_CENTER, 0, 0);
+            }
+            
+            lv_obj_t* temp_label = lv_label_create(item);
+            if (temp_label) {
+              char temp_str[10];
+              snprintf(temp_str, sizeof(temp_str), "%.0f°", id(forecast_hourly_temps)[i]);
+              lv_label_set_text(temp_label, temp_str);
+              lv_obj_align(temp_label, LV_ALIGN_BOTTOM_MID, 0, -10);
+              lv_obj_set_style_text_font(temp_label, nunito_20_engine->get_lv_font(), 0);
+              lv_obj_set_style_text_color(temp_label, lv_color_hex((id(color_misty_blue).r << 16) | (id(color_misty_blue).g << 8) | id(color_misty_blue).b), 0);
+            }
+          }
+
+  - id: refresh_theme
+    then:
+      - lvgl.obj.update:
+          id: root_card
+          bg_color: !lambda |-
+            return lv_color_hex(id(theme_background_color));
+      - lvgl.obj.update:
+          id: home_root_bg
+          bg_color: !lambda |-
+            return lv_color_hex(id(theme_background_color));
+      - lvgl.obj.update:
+          id: lights_page_card
+          bg_color: !lambda |-
+            return lv_color_hex(id(theme_panel_color));
+          border_color: !lambda |-
+            return lv_color_hex(id(theme_border_color));
+      - lvgl.obj.update:
+          id: home_weather_card
+          bg_color: !lambda |-
+            return lv_color_hex(id(theme_panel_color));
+          border_color: !lambda |-
+            return lv_color_hex(id(theme_border_color));
+      - lvgl.obj.update:
+          id: home_actions_card
+          bg_color: !lambda |-
+            return lv_color_hex(id(theme_panel_color));
+          border_color: !lambda |-
+            return lv_color_hex(id(theme_border_color));
+      - lvgl.obj.update:
+          id: home_center_ring
+          bg_color: !lambda |-
+            return lv_color_hex(id(theme_background_color));
+          border_color: !lambda |-
+            return lv_color_hex(id(theme_accent_color));
+      - lvgl.obj.update:
+          id: weather_time_widget_line
+          bg_color: !lambda |-
+            return lv_color_hex(id(theme_muted_color));
+      - lvgl.obj.update:
+          id: datetime_widget_line
+          bg_color: !lambda |-
+            return lv_color_hex(id(theme_muted_color));
+      - lvgl.obj.update:
+          id: home_center_line
+          bg_color: !lambda |-
+            return lv_color_hex(id(theme_muted_color));
+      # - lvgl.arc.update:
+      #     id: home_temp_arc
+      #     arc_color: !lambda |-
+      #       return lv_color_hex(id(theme_accent_color));
+      # - lvgl.arc.update:
+      #     id: home_humidity_arc
+      #     arc_color: !lambda |-
+      #       return lv_color_hex(id(theme_icon_idle_color));
+      - lvgl.obj.update:
+          id: shared_bottom_bar
+          bg_color: !lambda |-
+            return lv_color_hex(id(theme_panel_color));
+          border_color: !lambda |-
+            return lv_color_hex(id(theme_border_color));
+      - lvgl.obj.update:
+          id: settings_root_bg
+          bg_color: !lambda |-
+            return lv_color_hex(id(theme_background_color));
+      - lvgl.obj.update:
+          id: settings_card
+          bg_color: !lambda |-
+            return lv_color_hex(id(theme_panel_color));
+          border_color: !lambda |-
+            return lv_color_hex(id(theme_border_color));
+      - lvgl.obj.update:
+          id: settings_theme_selector_row
+          bg_color: !lambda |-
+            return lv_color_hex(id(theme_background_color));
+          border_color: !lambda |-
+            return lv_color_hex(id(theme_border_color));
+      - lvgl.obj.update:
+          id: settings_preview_panel
+          bg_color: !lambda |-
+            return lv_color_hex(id(theme_background_color));
+          border_color: !lambda |-
+            return lv_color_hex(id(theme_border_color));
+      - lvgl.obj.update:
+          id: settings_preview_accent_dot
+          bg_color: !lambda |-
+            return lv_color_hex(id(theme_accent_color));
+      - lvgl.obj.update:
+          id: lights_card
+          bg_color: !lambda |-
+            return lv_color_hex(id(theme_panel_color));
+          border_color: !lambda |-
+            return lv_color_hex(id(theme_border_color));
+      - lvgl.obj.update:
+          id: blinds_card
+          bg_color: !lambda |-
+            return lv_color_hex(id(theme_panel_color));
+          border_color: !lambda |-
+            return lv_color_hex(id(theme_border_color));
+      - lvgl.obj.update:
+          id: footer_card
+          bg_color: !lambda |-
+            return lv_color_hex(id(theme_panel_color));
+          border_color: !lambda |-
+            return lv_color_hex(id(theme_border_color));
+      - lvgl.obj.update:
+          id: home_lights_button
+          bg_color: !lambda |-
+            return lv_color_hex(id(theme_button_color));
+      - lvgl.obj.update:
+          id: home_dashboard_button
+          bg_color: !lambda |-
+            return lv_color_hex(id(theme_button_color));
+      - lvgl.obj.update:
+          id: dashboard_theme_button
+          bg_color: !lambda |-
+            return lv_color_hex(id(theme_button_color));
+      - lvgl.label.update:
+          id: room_title
+          text_color: !lambda |-
+            return lv_color_hex(id(theme_text_color));
+      - lvgl.label.update:
+          id: home_lights_icon
+          text_color: !lambda |-
+            return lv_color_hex(id(theme_text_color));
+      - lvgl.label.update:
+          id: home_dashboard_icon
+          text_color: !lambda |-
+            return lv_color_hex(id(theme_text_color));
+      - lvgl.label.update:
+          id: bottom_lock_icon
+          text_color: !lambda |-
+            return lv_color_hex(id(theme_muted_color));
+      - lvgl.label.update:
+          id: bottom_power_icon
+          text_color: !lambda |-
+            return lv_color_hex(id(theme_muted_color));
+      - lvgl.label.update:
+          id: bottom_home_icon
+          text_color: !lambda |-
+            return lv_color_hex(id(theme_muted_color));
+      - lvgl.label.update:
+          id: bottom_info_icon
+          text_color: !lambda |-
+            return lv_color_hex(id(theme_muted_color));
+      - lvgl.label.update:
+          id: bottom_settings_icon
+          text_color: !lambda |-
+            return lv_color_hex(id(theme_muted_color));
+      - lvgl.label.update:
+          id: shield_icon_shared
+          text_color: !lambda |-
+            return lv_color_hex(id(theme_icon_idle_color));
+      - lvgl.label.update:
+          id: ac_icon_shared
+          text_color: !lambda |-
+            return lv_color_hex(id(theme_icon_idle_color));
+      - lvgl.label.update:
+          id: heat_icon_shared
+          text_color: !lambda |-
+            return lv_color_hex(id(theme_icon_idle_color));
+      - lvgl.label.update:
+          id: lock_status
+          text_color: !lambda |-
+            return lv_color_hex(id(theme_icon_idle_color));
+      - lvgl.label.update:
+          id: heating_status
+          text_color: !lambda |-
+            return lv_color_hex(id(theme_icon_idle_color));
+      - lvgl.label.update:
+          id: ac_status
+          text_color: !lambda |-
+            return lv_color_hex(id(theme_icon_idle_color));
+      - lvgl.label.update:
+          id: alarm_panel_status
+          text_color: !lambda |-
+            return lv_color_hex(id(theme_icon_idle_color));
+      - lvgl.label.update:
+          id: home_outside_temp_label
+          text_color: !lambda |-
+            return lv_color_hex(id(theme_text_color));
+      - lvgl.label.update:
+          id: home_humidity_label
+          text_color: !lambda |-
+            return lv_color_hex(id(theme_text_color));
+      - lvgl.label.update:
+          id: home_wind_label
+          text_color: !lambda |-
+            return lv_color_hex(id(theme_text_color));
+      - lvgl.label.update:
+          id: home_time_label
+          text_color: !lambda |-
+            return lv_color_hex(id(theme_text_color));
+      - lvgl.label.update:
+          id: home_center_temp_label
+          text_color: !lambda |-
+            return lv_color_hex(id(theme_text_color));
+      - lvgl.label.update:
+          id: home_center_humidity_label
+          text_color: !lambda |-
+            return lv_color_hex(id(theme_text_color));
+      - lvgl.label.update:
+          id: home_weather_state_label
+          text_color: !lambda |-
+            return lv_color_hex(id(theme_muted_color));
+      - lvgl.label.update:
+          id: home_day_label
+          text_color: !lambda |-
+            return lv_color_hex(id(theme_muted_color));
+      - lvgl.label.update:
+          id: home_date_label
+          text_color: !lambda |-
+            return lv_color_hex(id(theme_muted_color));
+      - lvgl.label.update:
+          id: weather_wind_speed_unit
+          text_color: !lambda |-
+            return lv_color_hex(id(theme_text_color));
+      - lvgl.obj.update:
+          id: home_bg_indicators
+          bg_color: !lambda |-
+            return lv_color_hex(id(theme_icon_idle_color));
+      - lvgl.obj.update:
+          id: menu_controls_background
+          bg_color: !lambda |-
+            return lv_color_hex(id(theme_panel_color));
+      - lvgl.label.update:
+          id: display_lock_indicator
+          text_color: !lambda |-
+            return lv_color_hex(id(theme_muted_color));
+      - lvgl.label.update:
+          id: settings_title_label
+          text_color: !lambda |-
+            return lv_color_hex(id(theme_text_color));
+      - lvgl.label.update:
+          id: settings_subtitle_label
+          text_color: !lambda |-
+            return lv_color_hex(id(theme_muted_color));
+      - lvgl.label.update:
+          id: settings_preview_text
+          text_color: !lambda |-
+            return lv_color_hex(id(theme_text_color));
+      - lvgl.label.update:
+          id: settings_hint_label
+          text_color: !lambda |-
+            return lv_color_hex(id(theme_muted_color));
+      - lvgl.label.update:
+          id: settings_theme_value_label
+          text_color: !lambda |-
+            return lv_color_hex(id(theme_text_color));
+      - lvgl.label.update:
+          id: wifi_detail_label
+          text_color: !lambda |-
+            return lv_color_hex(id(theme_muted_color));
+      - lvgl.label.update:
+          id: ip_detail_label
+          text_color: !lambda |-
+            return lv_color_hex(id(theme_muted_color));
+      - if:
+          condition:
+            lambda: 'return !id(wifi_connected_flag);'
+          then:
+            - lvgl.label.update:
+                id: wifi_icon_shared
+                text_color: !lambda |-
+                  return lv_color_hex(id(theme_icon_idle_color));
+            - lvgl.label.update:
+                id: wifi_status
+                text_color: !lambda |-
+                  return lv_color_hex(id(theme_icon_idle_color));
+      - if:
+          condition:
+            lambda: 'return !id(api_connected_flag);'
+          then:
+            - lvgl.label.update:
+                id: ha_icon_shared
+                text_color: !lambda |-
+                  return lv_color_hex(id(theme_icon_idle_color));
+            - lvgl.label.update:
+                id: ha_status
+                text_color: !lambda |-
+                  return lv_color_hex(id(theme_icon_idle_color));
+
+  - id: refresh_lights
+    then:
+      - lvgl.obj.update:
+          id: light_btn_1
+          bg_color: !lambda |-
+            return id(light_1_state).state ? lv_color_hex(id(theme_accent_color)) : lv_color_hex(id(theme_button_color));
+      - lvgl.obj.update:
+          id: light_btn_2
+          bg_color: !lambda |-
+            return id(light_2_state).state ? lv_color_hex(id(theme_accent_color)) : lv_color_hex(id(theme_button_color));
+      - lvgl.obj.update:
+          id: light_btn_3
+          bg_color: !lambda |-
+            return id(light_3_state).state ? lv_color_hex(id(theme_accent_color)) : lv_color_hex(id(theme_button_color));
+      - lvgl.obj.update:
+          id: light_btn_4
+          bg_color: !lambda |-
+            return id(light_4_state).state ? lv_color_hex(id(theme_accent_color)) : lv_color_hex(id(theme_button_color));
+
+  - id: refresh_presence
+    then:
+      - lvgl.label.update:
+          id: presence_label
+          text: !lambda |-
+            int active = (id(presence_1).state ? 1 : 0) + (id(presence_2).state ? 1 : 0) + (id(presence_3).state ? 1 : 0);
+            static char buffer[32];
+            snprintf(buffer, sizeof(buffer), "Presence %d/3", active);
+            return buffer;
+
+  - id: refresh_covers
+    then:
+      - lvgl.bar.update:
+          id: left_cover_bar
+          value: !lambda |-
+            return (int)id(cover_left_pos).state;
+          animated: true
+      - lvgl.bar.update:
+          id: center_cover_bar
+          value: !lambda |-
+            return (int)id(cover_center_pos).state;
+          animated: true
+      - lvgl.bar.update:
+          id: right_cover_bar
+          value: !lambda |-
+            return (int)id(cover_right_pos).state;
+          animated: true
+
+lvgl:
+  displays:
+    - panel_display
+  touchscreens:
+    - touchscreen_id: touch_id
+  page_wrap: false
+  top_layer: !include living_room/ui/top_layer.yaml
+  pages: !include living_room/ui/pages.yaml
+
+interval:
+  - interval: 1s
+    then:
+      - lambda: |-
+          id(inactivity_seconds) += 1;
+      - lambda: |-
+          if (!id(backlight_dimmed) && id(display_backlight).current_values.is_on()) {
+            float current = id(display_backlight).current_values.get_brightness();
+            if (current > 0.01f) {
+              id(backlight_restore_brightness) = current;
+            }
+          }
+      - script.execute: dim_backlight_for_inactivity
+      - if:
+          condition:
+            lambda: 'return id(inactivity_seconds) > 20 && id(active_page_id) != 0;'
+          then:
+            - logger.log: "[ui] Inactivity timeout -> home page"
+            - script.execute: go_home_page
+
+  - interval: 2s
+    then:
+      - script.execute: boot_monitor_tick
+
+  - interval: 8s
+    then:
+      - script.execute: refresh_lights
+      - script.execute: refresh_covers
+      - script.execute: refresh_presence
+
+host:
+
+json:
+
+display:
+  - platform: sdl
+    id: panel_display
+    dimensions:
+      width: 480
+      height: 480
+    update_interval: never
+
+touchscreen:
+  - platform: sdl
+    id: touch_id
+    display: panel_display
+    on_touch:
+      - lambda: |-
+          id(inactivity_seconds) = 0;
+      - script.execute: restore_backlight_on_activity
+      - if:
+          condition:
+            light.is_off: display_backlight
+          then:
+            - logger.log: "[ui] Wake display on touch"
+            - light.turn_on:
+                id: display_backlight
+                transition_length: 0s
+                brightness: !lambda |-
+                  return id(backlight_restore_brightness);
+
+output:
+  - platform: template
+    id: backlight_output
+    type: float
+    write_action:
+      - logger.log:
+          format: "Backlight set to %f"
+          args: ["state"]
+
+switch:
+  - platform: template
+    id: relay_light_1
+    name: "Relay Light 1"
+    optimistic: true
+  - platform: template
+    id: relay_light_2
+    name: "Relay Light 2"
+    optimistic: true

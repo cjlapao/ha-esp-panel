@@ -85,8 +85,7 @@ widgets:
             text_color: color_steel_blue
             text_font: mdi_icons_24
 
-  # weather
-
+  # weather section
   - obj:
       id: home_weather_card
       hidden: false
@@ -124,7 +123,7 @@ widgets:
                   align: top_left
                   text_font: nunito_48
                   text_color: color_misty_blue
-                  text: "-25°"
+                  text: "-24°"
                   text_align: right
 
               - label:
@@ -137,15 +136,15 @@ widgets:
                   text: " "
                   text_align: right
 
-              # - label:
-              #     id: weather_humidity_measurement
-              #     x: -60
-              #     y: 10
-              #     align: top_right
-              #     text_font: nunito_20
-              #     text_color: color_misty_blue
-              #     text: "%"
-              #     text_align: right
+              - label:
+                  id: weather_humidity_measurement
+                  x: -60
+                  y: 10
+                  align: top_right
+                  text_font: nunito_20
+                  text_color: color_misty_blue
+                  text: "%"
+                  text_align: right
                 
               - label:
                   id: weather_humidity_icon
@@ -177,15 +176,15 @@ widgets:
                   text: " "
                   text_align: right
 
-              # - label:
-              #     id: weather_wind_speed_icon
-              #     x: -30
-              #     y: 40
-              #     align: top_right
-              #     text_font: mdi_icons_24
-              #     text_color: color_misty_blue
-              #     text: "${windsock_icon}"
-              #     text_align: right
+              - label:
+                  id: weather_wind_speed_icon
+                  x: -30
+                  y: 40
+                  align: top_right
+                  text_font: mdi_icons_24
+                  text_color: color_misty_blue
+                  text: "${windsock_icon}"
+                  text_align: right
 
               - image:
                   id: weather_wind_speed_image
@@ -415,8 +414,11 @@ widgets:
                         knob:
                           bg_opa: transp
                         on_release:
+                          - lambda: |-
+                              id(backlight_restore_brightness) = int(x) / 100.0f;
                           - light.turn_on:
                               id: display_backlight
+                              transition_length: 0s
                               brightness: !lambda return int(x)/ 100.0;
 
               - obj:
@@ -480,11 +482,11 @@ widgets:
   - obj:
       id: weather_state_images
       hidden: false
-      y: -6
-      width: 110
-      height: 110
+      y: 22
+      width: 128
+      height: 128
       align: top_mid
-      clickable: true
+      clickable: false
       radius: 0
       pad_all: 0
       bg_opa: transp
@@ -495,154 +497,154 @@ widgets:
         - image:
             id: weather_sunny_image
             hidden: true
-            y: -9
+            y: 0
             x: 0
             align: top_mid
             src: home_weather_sunny_img
         - image:
             id: weather_clear_night_image
             hidden: true
-            y: -9
+            y: 0
             x: 0
             align: top_mid
             src: home_weather_clear_night_img
         - image:
             id: weather_cloudy_image
             hidden: true
-            y: 11
+            y: 0
             x: 0
             align: top_mid
             src: home_weather_cloudy_img
         - image:
             id: weather_cloudy_night_image
             hidden: true
-            y: 11
+            y: 0
             x: 0
             align: top_mid
             src: home_weather_cloudy_night_img
         - image:
             id: weather_partlycloudy_sun_image
             hidden: false
-            y: 1
+            y: 0
             x: 0
             align: top_mid
             src: home_weather_partlycloudy_sun_img
         - image:
             id: weather_partlycloudy_moon_image
             hidden: true
-            y: 1
+            y: 0
             x: 0
             align: top_mid
             src: home_weather_partlycloudy_moon_img
         - image:
             id: weather_rainy_image
             hidden: true
-            y: 1
+            y: 0
             x: 0
             align: top_mid
             src: home_weather_rainy_img
         - image:
             id: weather_rainy_night_image
             hidden: true
-            y: 1
+            y: 0
             x: 0
             align: top_mid
             src: home_weather_rainy_night_img
         - image:
             id: weather_pouring_image
             hidden: true
-            y: 1
+            y: 0
             x: 0
             align: top_mid
             src: home_weather_pouring_img
         - image:
             id: weather_pouring_night_image
             hidden: true
-            y: 1
+            y: 0
             x: 0
             align: top_mid
             src: home_weather_pouring_night_img
         - image:
             id: weather_snowy_image
             hidden: true
-            y: 1
+            y: 0
             x: 0
             align: top_mid
             src: home_weather_snowy_img
         - image:
             id: weather_snowy_night_image
             hidden: true
-            y: 1
+            y: 0
             x: 0
             align: top_mid
             src: home_weather_snowy_night_img
         - image:
             id: weather_snowy_rainy_image
             hidden: true
-            y: 1
+            y: 0
             x: 0
             align: top_mid
             src: home_weather_snowy_rainy_img
         - image:
             id: weather_fog_image
             hidden: true
-            y: 1
+            y: 0
             x: 0
             align: top_mid
             src: home_weather_fog_img
         - image:
             id: weather_fog_night_image
             hidden: true
-            y: 1
+            y: 0
             x: 0
             align: top_mid
             src: home_weather_fog_night_img
         - image:
             id: weather_hail_image
             hidden: true
-            y: 1
+            y: 0
             x: 0
             align: top_mid
             src: home_weather_hail_img
         - image:
             id: weather_lightning_image
             hidden: true
-            y: 1
+            y: 0
             x: 0
             align: top_mid
             src: home_weather_lightning_img
         - image:
             id: weather_lightning_night_image
             hidden: true
-            y: 1
+            y: 0
             x: 0
             align: top_mid
             src: home_weather_lightning_night_img
         - image:
             id: weather_lightning_rainy_image
             hidden: true
-            y: 1
+            y: 0
             x: 0
             align: top_mid
             src: home_weather_lightning_rainy_img
         - image:
             id: weather_lightning_rainy_night_image
             hidden: true
-            y: 1
+            y: 0
             x: 0
             align: top_mid
             src: home_weather_lightning_rainy_night_img
         - image:
             id: weather_windy_image
             hidden: true
-            y: -14
-            x: 5
+            y: 0
+            x: 0
             align: top_mid
             src: home_weather_windy_img
         - image:
             id: weather_windy_variant_image
             hidden: true
-            y: 1
+            y: 0
             x: 0
             align: top_mid
             src: home_weather_windy_variant_img
@@ -953,9 +955,26 @@ widgets:
       radius: 20
       widgets:
         - button:
-            id: display_lock_btn
+            id: home_widget_btn
             clickable: true
             x: 10
+            width: 50
+            height: 50
+            align: left_mid
+            bg_opa: transp
+            shadow_opa: transp
+            widgets:
+              - label:
+                  align: center
+                  text_color: color_misty_blue
+                  text_font: mdi_icons_28
+                  text: "${home_icon}"
+            on_click:
+              - script.execute: go_home_page
+        - button:
+            id: display_lock_btn
+            clickable: true
+            x: 60
             width: 50
             height: 50
             align: left_mid
@@ -976,7 +995,7 @@ widgets:
         - button:
             id: backlight_brightness_off_btn
             clickable: true
-            x: 60
+            x: 110
             width: 50
             height: 50
             align: left_mid
@@ -995,24 +1014,6 @@ widgets:
 
 
         - button:
-            id: home_widget_btn
-            clickable: true
-            x: 110
-            width: 50
-            height: 50
-            align: left_mid
-            bg_opa: transp
-            shadow_opa: transp
-            widgets:
-              - label:
-                  align: center
-                  text_color: color_misty_blue
-                  text_font: mdi_icons_28
-                  text: "${home_icon}"
-            on_click:
-              - script.execute: go_home_page
-
-        - button:
             id: weather_widget_btn
             clickable: true
             x: -110
@@ -1028,8 +1029,18 @@ widgets:
                   text_font: mdi_icons_28
                   text: "${weather_icon}"
             on_click:
-              - script.execute: go_dashboard_page
-
+              then:
+                - homeassistant.action:
+                    action: display_tools.get_forecasts
+                    data:
+                      entity_id: "${weather_entity}"
+                      type: "daily"
+                - homeassistant.action:
+                    action: display_tools.get_forecasts
+                    data:
+                      entity_id: "${weather_entity}"
+                      type: "hourly"
+                - script.execute: go_weather_page
 
         - button:
             id: info_widget_btn
@@ -1116,7 +1127,7 @@ widgets:
                   width: 130
                   height: 130
                   start_angle: 180
-                  end_angle: 360
+                  end_angle: 300
                   arc_width: 5
                   arc_color: color_red
                   arc_rounded: false

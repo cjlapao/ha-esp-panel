@@ -1,0 +1,326 @@
+id: weather_page
+bg_color: color_slate_blue_gray
+scrollable: false
+widgets:
+  - obj:
+      id: weather_page_bg
+      x: 0
+      y: 0
+      width: 480
+      height: 480
+      pad_all: 0
+      align: center
+      bg_color: color_slate_blue_gray
+      border_opa: transp
+      border_width: 0
+      shadow_opa: transp
+      widgets:
+        # STATUS BAR
+        - obj:
+            id: weather_bg_indicators
+            y: 10
+            width: 460
+            height: 40
+            align: TOP_MID
+            pad_all: 0
+            bg_opa: transp
+            border_opa: transp
+            border_width: 0
+            shadow_opa: transp
+            widgets:
+              # Wi-Fi status
+              - label:
+                  id: weather_wifi_status
+                  align: left_mid
+                  x: 20
+                  text: "${wifi_100_icon}"
+                  text_color: color_steel_blue
+                  text_font: icons_24
+
+              # Home Assistant status
+              - label:
+                  id: weather_ha_status
+                  align: left_mid
+                  x: 60
+                  text: "${ha_icon}"
+                  text_color: color_steel_blue
+                  text_font: mdi_icons_24
+
+              # Lock status
+              - label:
+                  id: weather_lock_status
+                  align: left_mid
+                  x: 100
+                  text: "${lock_icon}"
+                  text_color: color_steel_blue
+                  text_font: icons_24
+
+              # Heating status
+              - label:
+                  id: weather_heating_status
+                  align: right_mid
+                  x: -20
+                  text: "${heating_icon}"
+                  text_color: color_steel_blue
+                  text_font: icons_24
+
+              # AC status
+              - label:
+                  id: weather_ac_status
+                  align: right_mid
+                  x: -60
+                  y: 2
+                  text: "${air_conditioner_icon}"
+                  text_color: color_steel_blue
+                  text_font: icons_24
+
+              # Alarm panel status
+              - label:
+                  id: weather_alarm_panel_status
+                  align: right_mid
+                  x: -100
+                  text: "${shield_arming_icon}"
+                  text_color: color_steel_blue
+                  text_font: mdi_icons_24
+
+        # FORECAST CARDS
+        - obj:
+            id: weather_page_forecast_buttons
+            y: 60
+            width: 440
+            height: 50
+            align: top_mid
+            clickable: false
+            radius: 20
+            pad_all: 0
+            bg_opa: transp
+            border_opa: transp
+            border_width: 0
+            shadow_opa: transp
+            widgets:
+              - button:
+                  id: weather_page_forecast_daily_btn
+                  width: 220
+                  height: 40
+                  align: left_mid
+                  clickable: true
+                  radius: 20
+                  pad_all: 0
+                  bg_opa: transp
+                  border_opa: transp
+                  border_width: 0
+                  shadow_opa: transp
+                  widgets:
+                    - label:
+                        id: weather_page_forecast_daily_label
+                        align: top_mid
+                        text_font: nunito_20
+                        text_color: color_steel_blue
+                        text: "Daily"
+                  on_press:
+                    then:
+                      - lvgl.label.update:
+                          id: weather_page_forecast_daily_label
+                          text_color: color_misty_blue
+                      - lvgl.label.update:
+                          id: weather_page_forecast_hourly_label
+                          text_color: color_steel_blue
+                      - lvgl.widget.hide: weather_page_forecast_hourly
+                      - lvgl.widget.show: weather_page_forecast_daily
+              - button:
+                  id: weather_page_forecast_hourly_btn
+                  width: 220
+                  height: 40
+                  align: right_mid
+                  clickable: true
+                  radius: 20
+                  pad_all: 0
+                  bg_opa: transp
+                  border_opa: transp
+                  border_width: 0
+                  shadow_opa: transp
+                  widgets:
+                    - label:
+                        id: weather_page_forecast_hourly_label
+                        align: top_mid
+                        text_font: nunito_20
+                        text_color: color_misty_blue
+                        text: "Hourly"
+                  on_press:
+                    then:
+                      - lvgl.label.update:
+                          id: weather_page_forecast_hourly_label
+                          text_color: color_misty_blue
+                      - lvgl.label.update:
+                          id: weather_page_forecast_daily_label
+                          text_color: color_steel_blue
+                      - lvgl.widget.hide: weather_page_forecast_daily
+                      - lvgl.widget.show: weather_page_forecast_hourly
+
+        # DAILY CONTAINER
+        - obj:
+            id: weather_page_forecast_daily
+            hidden: true
+            y: 110
+            width: 408
+            height: 280
+            align: top_mid
+            clickable: false
+            radius: 20
+            pad_all: 0
+            bg_opa: transp
+            border_opa: transp
+            border_width: 0
+            shadow_opa: transp
+
+        # HOURLY CONTAINER
+        - obj:
+            id: weather_page_forecast_hourly
+            hidden: false
+            y: 110
+            width: 408
+            height: 280
+            align: top_mid
+            clickable: false
+            radius: 20
+            pad_all: 0
+            bg_opa: transp
+            border_opa: transp
+            border_width: 0
+            shadow_opa: transp
+
+        # BOTTOM NAVIGATION BAR
+        - obj:
+            id: weather_bottom_bar
+            x: 0
+            y: -20
+            width: 440
+            height: 60
+            pad_all: 0
+            align: bottom_mid
+            bg_color: color_slate_blue_gray
+            shadow_opa: transp
+            border_opa: transp
+            border_width: 0
+            radius: 20
+            widgets:
+              - button:
+                  id: weather_lock_btn
+                  clickable: true
+                  x: 10
+                  width: 50
+                  height: 50
+                  align: left_mid
+                  bg_opa: transp
+                  shadow_opa: transp
+                  checked:
+                    bg_opa: transp
+                  widgets:
+                    - label:
+                        id: weather_lock_icon
+                        align: center
+                        text_color: color_misty_blue
+                        text_font: mdi_icons_28
+                        text: "${lock_variant_icon}"
+                  on_click:
+                    then:
+                      - light.turn_off: display_backlight
+
+              - button:
+                  id: weather_brightness_btn
+                  clickable: true
+                  x: 60
+                  width: 50
+                  height: 50
+                  align: left_mid
+                  bg_opa: transp
+                  shadow_opa: transp
+                  widgets:
+                    - label:
+                        align: center
+                        text_color: color_misty_blue
+                        text_font: mdi_icons_28
+                        text: "${brightness_icon}"
+                  on_click:
+                    then:
+                      - delay: 1s
+                      - light.turn_off: display_backlight
+                      - lvgl.pause:
+
+              - button:
+                  id: weather_home_btn
+                  clickable: true
+                  x: 110
+                  width: 50
+                  height: 50
+                  align: left_mid
+                  bg_opa: transp
+                  shadow_opa: transp
+                  widgets:
+                    - label:
+                        align: center
+                        text_color: color_misty_blue
+                        text_font: mdi_icons_28
+                        text: "${home_icon}"
+                  on_click:
+                    then:
+                      - script.execute: go_home_page
+
+              - button:
+                  id: weather_weather_btn
+                  clickable: true
+                  x: -110
+                  width: 50
+                  height: 50
+                  align: right_mid
+                  bg_opa: transp
+                  shadow_opa: transp
+                  widgets:
+                    - label:
+                        id: weather_weather_icon_active
+                        align: center
+                        text_color: color_misty_blue
+                        text_font: mdi_icons_28
+                        text: "${weather_icon}"
+                  on_click:
+                    then:
+                      - script.execute: go_weather_page
+
+              - button:
+                  id: weather_info_btn
+                  clickable: true
+                  x: -60
+                  width: 50
+                  height: 50
+                  align: right_mid
+                  bg_opa: transp
+                  shadow_opa: transp
+                  widgets:
+                    - label:
+                        align: center
+                        text_color: color_misty_blue
+                        text_font: mdi_icons_28
+                        text: "${info_icon}"
+                  on_click:
+                    then:
+                      - script.execute: go_dashboard_page
+
+              - button:
+                  id: weather_settings_btn
+                  clickable: true
+                  x: -10
+                  width: 50
+                  height: 50
+                  align: right_mid
+                  bg_opa: transp
+                  shadow_opa: transp
+                  widgets:
+                    - label:
+                        align: center
+                        text_color: color_misty_blue
+                        text_font: mdi_icons_28
+                        text: "${settings_icon}"
+                  on_click:
+                    then:
+                      - script.execute: go_settings_page
+
