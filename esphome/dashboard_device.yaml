@@ -2,7 +2,7 @@
 # dashboard_living_room.yaml - Hardware entrypoint (ESP32)
 # ============================================================
 packages:
-  base: !include living_room/living_room_base.yaml
+  base: !include dashboard/_base.yaml
 
 substitutions:
   relay_1_pin: GPIO1
